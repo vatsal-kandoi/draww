@@ -5,6 +5,7 @@ import useThemeProvider from "./hooks/themeprovider"
 import { ThemeProvider } from '@mui/material/styles';
 import EventsMenu from './components/toplevel/events-menu';
 import CanvasActionBar from './components/toplevel/action-bar';
+import AdditionalPropertiesSelector from "./components/toplevel/properties-bar";
 import { useLanguageProvider } from './hooks/languageprovider';
 import { Provider } from 'react-redux'
 import store from './redux/store';
@@ -20,6 +21,7 @@ const App: React.FC<{}> = () => {
           <ThemeProvider theme={theme}>
             <CanvasActionBar />
             <EventsMenu />
+            <AdditionalPropertiesSelector />
           </ThemeProvider>
         </LanguageProviderContext.Provider>
       </ThemeProviderContext.Provider>
