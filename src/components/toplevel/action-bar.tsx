@@ -33,7 +33,7 @@ const CanvasActionBar: React.FC<{selectedCanvasAction: CanvasActionType, onSelec
     }
 
     return (
-        <ButtonStack square={false}>
+        <ButtonStack square={false} elevation={1}>
             <Stack direction="row"
                     justifyContent="center"
                     alignItems="center"

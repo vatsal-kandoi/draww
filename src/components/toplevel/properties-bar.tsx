@@ -3,7 +3,7 @@ import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import { styled } from '@mui/material/styles';
 import { connect } from "react-redux";
-import { CanvasActionType } from "../../interfaces/enums";
+import { CanvasActionType, AttributeAction } from "../../interfaces/enums";
 import ColorPicker from "../input/color";
 
 const AdditionalPropertiesContainer = styled(Paper)(({ theme }) => ({
@@ -18,19 +18,23 @@ const AdditionalPropertiesContainer = styled(Paper)(({ theme }) => ({
     paddingBottom: theme.spacing(1)
 }));
 
-const AdditionalPropertiesSelector: React.FC<{selectedCanvasAction: CanvasActionType}> = (props) => {
+const AdditionalPropertiesSelector: React.FC<{
+    selectedCanvasAction: CanvasActionType
+    onSelectedColorChange: any,
+    selectedColor: string,
+}> = (props) => {
 
     return (
         <>
             {(props.selectedCanvasAction === CanvasActionType.NONE) ? (
                 <> </>
             ) : (
-                <AdditionalPropertiesContainer square={false}>
+                <AdditionalPropertiesContainer square={false} elevation={1}>
                     <Stack direction="column"
                             alignItems="center"
                             spacing={2} >
-                        <ColorPicker defaultColor="#FFFFFF"
-                                onSelectionChange={(newColour: string) => console.log(newColour)}/>
+                        <ColorPicker defaultColor={props.selectedColor}
+                                onSelectionChange={props.onSelectedColorChange}/>
                     </Stack>
                 </AdditionalPropertiesContainer>
             )}
@@ -39,7 +43,15 @@ const AdditionalPropertiesSelector: React.FC<{selectedCanvasAction: CanvasAction
 }
 
 const mapStateToProps = (state: any) => ({
-    selectedCanvasAction: state.selectedCanvasAction.activeCanvasActionType
+    selectedCanvasAction: state.selectedCanvasAction.activeCanvasActionType,
+    selectedColor: state.attributes.color
 }); 
   
-export default connect(mapStateToProps)(AdditionalPropertiesSelector);
+const mapDispatchToProps = (dispatch: any) => ({
+    onSelectedColorChange: (color: string) => dispatch({ 
+        type: AttributeAction.SELECT_COLOR,
+        payload: { color }
+    }),
+});
+  
+export default connect(mapStateToProps, mapDispatchToProps)(AdditionalPropertiesSelector);

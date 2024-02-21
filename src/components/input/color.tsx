@@ -21,12 +21,17 @@ const ColorPicker: React.FC<{defaultColor: string, onSelectionChange: any}> = (p
         colorPickerInputRef.current?.click();
     };
 
+    const onColorChange = (event: any) => {
+        onValueChange(event.target.value);
+        props.onSelectionChange(event.target.value);
+    }
+
     return (
         <Stack direction={"row"}
                 alignItems={"center"}
                 justifyContent={"flex-start"} >
             <input type="color" 
-                    onChange={(event) => { onValueChange(event.target.value) }} 
+                    onChange={onColorChange}
                     id="input-color-picker" 
                     name="input-color-picker" 
                     value={value} 

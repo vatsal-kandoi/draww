@@ -1,10 +1,10 @@
 import { combineReducers } from 'redux';
 import canvasActionReducer from "./canvasActionReducer";
-
+import attributeOptionsReducer from "./attributeActionReducer"
 
 const rootReducer = combineReducers({
   selectedCanvasAction: canvasActionReducer,
-  // Add other reducers here if you have more
+  attributes: attributeOptionsReducer,
 });
 
 export default rootReducer;

@@ -17,3 +17,8 @@ export enum CanvasActionSelectionType {
     SELECT = "SELECT",
     DESELECT = "DESELECT"
 }
+
+export enum AttributeAction {
+    SELECT_COLOR = "SELECT_COLOR",
+    NONE = "NONE"
+}

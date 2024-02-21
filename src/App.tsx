@@ -9,6 +9,7 @@ import AdditionalPropertiesSelector from "./components/toplevel/properties-bar";
 import { useLanguageProvider } from './hooks/languageprovider';
 import { Provider } from 'react-redux'
 import store from './redux/store';
+import Canvas from './components/toplevel/canvas';
 
 const App: React.FC<{}> = () => {
   const {themeContextValue, theme} = useThemeProvider();
@@ -19,6 +20,7 @@ const App: React.FC<{}> = () => {
       <ThemeProviderContext.Provider value={themeContextValue}>
         <LanguageProviderContext.Provider value={languageContextValue}>        
           <ThemeProvider theme={theme}>
+            <Canvas />
             <CanvasActionBar />
             <EventsMenu />
             <AdditionalPropertiesSelector />

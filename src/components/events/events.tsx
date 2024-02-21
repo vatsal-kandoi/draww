@@ -31,7 +31,7 @@ const Events: React.FC<{}> = () => {
   
 
     return (
-        <ButtonStack square={false}>
+        <ButtonStack square={false} elevation={1}>
             <Stack direction="column">
                 <EventsBar />
                 <Divider />

@@ -8,7 +8,9 @@ const messages: object = {
     "aria_buttons_pen": "Select pen to draw",
     "aria_buttons_square": "Select square to draw",
 
-    
+    "messages_unsupportedbrowser": "Your browser does not support the HTML canvas tag",
+
+
     "aria_messages_user_count": "Unique user count across events",
     "aria_messages_event_count": "Event count",
     "aria_messages_events_show": "Show all events",
