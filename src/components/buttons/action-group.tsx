@@ -11,13 +11,11 @@ import UploadIcon from '@mui/icons-material/Upload';
 
 const ButtonStack = styled(Paper)(({ theme }) => ({
     ...theme.typography.body2,
-    position: "absolute",
-    top: theme.spacing(1),
-    right: theme.spacing(1),
     paddingTop: theme.spacing(1),
     paddingBottom: theme.spacing(1),
-    paddingLeft: theme.spacing(2),
-    paddingRight: theme.spacing(2),
+    paddingLeft: theme.spacing(1),
+    paddingRight: theme.spacing(1),
+    width: "100%"
 }));
 
 
