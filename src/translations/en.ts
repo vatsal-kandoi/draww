@@ -5,6 +5,10 @@ const messages: object = {
     "aria_buttons_upload": "Upload diagram",
     "aria_buttons_download": "Download diagram",
     "aria_buttons_events_reset": "Clear all event",
+    "aria_buttons_pen": "Select pen to draw",
+    "aria_buttons_square": "Select square to draw",
+
+    
     "aria_messages_user_count": "Unique user count across events",
     "aria_messages_event_count": "Event count",
     "aria_messages_events_show": "Show all events",

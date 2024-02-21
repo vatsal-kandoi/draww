@@ -6,3 +6,14 @@ export enum Themes {
     LIGHT = "light", 
     DARK = "dark",
 }
+
+export enum CanvasActionType {
+    NONE,
+    PEN,
+    SQUARE
+}
+
+export enum CanvasActionSelectionType {
+    SELECT = "SELECT",
+    DESELECT = "DESELECT"
+}

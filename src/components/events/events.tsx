@@ -5,17 +5,8 @@ import { styled } from '@mui/material/styles';
 import EventsBar from "./events-bar";
 import Divider from '@mui/material/Divider';
 import Collapse from '@mui/material/Collapse';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItem from '@mui/material/ListItem';
-import ListItemText from '@mui/material/ListItemText';
-import Badge from '@mui/material/Badge';
 import { useLanguageStore } from "../../hooks/languageprovider";
 import List from '@mui/material/List';
-import Typography from '@mui/material/Typography';
-import IconButton from '@mui/material/IconButton';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { Event, LastEvent } from "./event";
 
 

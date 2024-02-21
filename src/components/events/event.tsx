@@ -7,9 +7,6 @@ import IconButton from '@mui/material/IconButton';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { I18n } from "i18n-js";
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 
