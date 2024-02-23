@@ -44,12 +44,12 @@ const CanvasActionBar: React.FC<{selectedCanvasAction: CanvasActionType, onSelec
                         aria-label={i18n.t("aria_buttons_pen")}>
                     <ModeIcon />
                 </IconButton>
-                <IconButton id="square"
+                {/* <IconButton id="square"
                         color={(props.selectedCanvasAction === CanvasActionType.SQUARE) ? "primary" : "default"}
                         onClick={() => onClick(CanvasActionType.SQUARE, props.selectedCanvasAction === CanvasActionType.SQUARE)}
                         aria-label={i18n.t("aria_buttons_square")}>
                     <CropSquareIcon />                    
-                </IconButton>
+                </IconButton> */}
             </Stack>
         </ButtonStack>
     );

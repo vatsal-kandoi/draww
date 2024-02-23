@@ -9,7 +9,6 @@ const ButtonStack = styled(Stack)(({ theme }) => ({
     position: "absolute",
     top: theme.spacing(1),
     right: theme.spacing(3),
-    height: `calc(100% - ${theme.spacing(1)})`,
     width: "300px"
 }));
 

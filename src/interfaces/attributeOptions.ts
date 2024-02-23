@@ -6,4 +6,4 @@ interface AttributeChange {
     color?: string;
 }
 
-export type {IAttributeOptions, AttributeChange};
+export type {IAttributeOptions, AttributeChange };

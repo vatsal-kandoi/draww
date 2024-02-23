@@ -8,9 +8,10 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { I18n } from "i18n-js";
 import DeleteIcon from '@mui/icons-material/Delete';
+import { IEvent } from "../../interfaces/events";
 
 
-const LastEvent: React.FC<{count: number, i18n: I18n, handleEventCollapsibleEvent: any, isOpen: boolean}> = (props) => {
+const LastEvent: React.FC<{count: number, i18n: I18n, handleEventCollapsibleEvent: any, isOpen: boolean, event: IEvent | null}> = (props) => {
     return (
         <ListItem alignItems="flex-start"
                 secondaryAction={
@@ -23,42 +24,48 @@ const LastEvent: React.FC<{count: number, i18n: I18n, handleEventCollapsibleEven
                         </IconButton>
                     </Badge>
                 }>
-            <ListItemText primary="Square creation"
-                    secondary={
-                        <>
-                            <Typography sx={{ display: 'inline' }}
-                                    component="span"
-                                    variant="body2"
-                                    color="text.primary" >
-                                Vatsal
-                            </Typography>
-                            {" created a square"}
-                        </>
-                    } />
+            {(props.event !== null) ? (
+                <ListItemText primary={props.event.header}
+                        secondary={
+                            <>
+                                <Typography sx={{ display: 'inline', marginRight: "0.5em" }}
+                                        component="span"
+                                        variant="body2"
+                                        color="text.primary" >
+                                    {props.event.user_name}
+                                </Typography>
+                                {props.event.description}
+                            </>
+                        } />
+            ) : (
+                <ListItemText primary={"No events created"} />
+            )}
         </ListItem>
     );
 }
 
-const Event: React.FC<{i18n: I18n}> = (props) => {    
+const Event: React.FC<{i18n: I18n, event: IEvent, onDeleteEvent: any, showDeleteOption: boolean}> = (props) => {    
     return (
         <ListItem alignItems="flex-start"
                 secondaryAction={
                     <>
-                        <IconButton aria-label={props.i18n.t("aria_messages_event_delete")}>
-                            <DeleteIcon />
-                        </IconButton>
+                        {(props.showDeleteOption ) ? (
+                            <IconButton onClick={() => props.onDeleteEvent(props.event.event_id)} aria-label={props.i18n.t("aria_messages_event_delete")}>
+                                <DeleteIcon/>
+                            </IconButton>
+                        ) : null }
                     </>
                 }>
-            <ListItemText primary="Square creation"
+            <ListItemText primary={props.event.header}
                     secondary={
                         <>
-                            <Typography sx={{ display: 'inline' }}
+                            <Typography sx={{ display: 'inline', marginRight: "0.5em" }}
                                     component="span"
                                     variant="body2"
                                     color="text.primary" >
-                                Vatsal
+                                {props.event.user_name}
                             </Typography>
-                            {" created a square"}
+                            {props.event.description}
                         </>
                     } />
         </ListItem>

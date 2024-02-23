@@ -22,3 +22,9 @@ export enum AttributeAction {
     SELECT_COLOR = "SELECT_COLOR",
     NONE = "NONE"
 }
+
+export enum CanvasEventType {
+    ADD = "ADD",
+    DELETE = "DELETE",
+    DELETE_CONFIRMED = "DELETE_CONFIRMED",
+}
