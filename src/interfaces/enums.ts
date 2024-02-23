@@ -7,6 +7,10 @@ export enum Themes {
     DARK = "dark",
 }
 
+export enum Shape { 
+    LINE = "LINE"
+}
+
 export enum CanvasActionType {
     NONE,
     PEN,
