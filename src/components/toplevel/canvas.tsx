@@ -6,10 +6,9 @@ import { useLanguageStore } from "../../hooks/languageprovider";
 import { styled } from '@mui/material/styles';
 import { Paper } from "@mui/material";
 import { useMousePositions, useMousePress } from "../../hooks/mousePositionProvider";
-import useEventDeletionEvents from "../../hooks/eventDeletionProvider";
-import { Event, createEvent } from "../../structures/event";
-import { Line } from "../../structures/shape";
+import { Event } from "../../structures/event";
 import useEventCaptureManager from "../../hooks/eventCaptureManager";
+import useCanvasDisplayManager from "../../hooks/canvasDisplayManager";
 
 
 const CanvasContainer = styled(Paper)(({ theme }) => ({
@@ -36,23 +35,12 @@ const Canvas: React.FC<ICanvasProps> = (props) => {
     const isMousePressed = useMousePress(captureMousePosition);
     const captureManager = useEventCaptureManager(props.selectedCanvasAction, props.attributes);
 
-    useEventDeletionEvents(canvasRef)
+    const newEvent = useCanvasDisplayManager(captureManager, canvasRef, current, previous, isMousePressed);
 
     React.useEffect(() => {
-        if (isMousePressed) {
-            
-            if (canvasRef.current === null) return;
-            const context = canvasRef.current.getContext("2d");
-            if (context === null) return;
-
-            captureManager.registerShapeOnCanvas(previous, current, context);
-        } else {
-            if (captureManager.hasCapturedShape()) {
-                const event = captureManager.generateEvent("Vatsal")
-                props.registerNewEvent(event);    
-            }
-        }
-    }, [current, previous, isMousePressed, captureManager]);
+        if (newEvent !== undefined) 
+            props.registerNewEvent(newEvent);
+    }, [newEvent]);
 
     React.useEffect(() => {
         if (canvasContainerRef.current === null) return ;
@@ -63,8 +51,6 @@ const Canvas: React.FC<ICanvasProps> = (props) => {
         canvasRef.current.style.margin = "0px";
         canvasRef.current.style.padding = "0px";
 
-        console.log(canvasRef.current.offsetHeight)
-        console.log(canvasRef.current.offsetWidth)
         canvasRef.current.width  = canvasRef.current.offsetWidth;
         canvasRef.current.height = canvasRef.current.offsetHeight;
     }, []);

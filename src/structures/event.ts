@@ -17,6 +17,10 @@ class Event {
         this.shape = shape;
     }
 
+    public isEqual(other: Event) {
+        return this.event_name === other.event_name;
+    }
+
     protected getNewEventID() {
         const length = 10;
         let result = '';
@@ -47,7 +51,7 @@ class PenEvent extends Event {
         return {
             user_name: this.user_name,
             type: this.type,
-            shape: (this.shape as Line[]).forEach((shape) => shape.exportToJson()),
+            shape: (this.shape as Line[]).map((shape) => shape.exportToJson()),
         }
     }
 
@@ -63,7 +67,7 @@ const createEventFromJSON = (eventJson: any): any => {
         return createEvent(
             CanvasActionType.PEN, 
             eventJson.user_name as string,
-            eventJson.shape.forEach((shapeJson: any) => createShapeFromJSON(shapeJson)),
+            eventJson.shape.map((shapeJson: any) => createShapeFromJSON(shapeJson)),
         );
 
 }
@@ -130,39 +134,21 @@ class EventCaptureManager {
 }
 
 
-class EventManager {
-
-    public events: Event[];
-
-    constructor() {
-        this.events = [];
-    }
-
-    public clear() {
-        this.events = [];
-    }
-
-    public getLastEvent(): Event | null {
-        return (this.events.length > 0) ? this.events[this.events.length - 1] : null
-    }
-
-    public addEvent(event: Event): void {
-        this.events.push(event);
-    }
-
-    public removeEvent(event: Event): void {
-        this.events = this.events.filter((ev: Event) => ev.event_name !== event.event_name );
-    }
-
-    public loadFromJson(eventsJson: any) {
-        this.events = eventsJson.events.forEach((eventJson: any) => createEventFromJSON(eventJson));
-    }
-
-    public exportToJson() {
-        return {
-            "events": this.events.forEach((event: any) => event.exportToJson())
-        }
-    }
+const loadEventsFromJSON = (eventsJson: any): Event[] => {
+    return eventsJson.events.map((eventJson: any) => createEventFromJSON(eventJson));
 }
 
-export { createEventFromJSON, createEvent, Event, PenEvent, EventManager, EventCaptureManager }; 
+const exportEventsToJSON = (events: Event[]): any => {
+    return {
+        "events": events.map((event: any) => event.exportToJson())
+    }
+}
+export { 
+    createEventFromJSON, 
+    createEvent, 
+    Event, 
+    PenEvent, 
+    exportEventsToJSON,
+    loadEventsFromJSON, 
+    EventCaptureManager 
+}; 

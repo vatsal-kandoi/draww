@@ -31,4 +31,5 @@ export enum CanvasEventType {
     ADD = "ADD",
     DELETE = "DELETE",
     DELETE_CONFIRMED = "DELETE_CONFIRMED",
+    LOAD = "LOAD"
 }

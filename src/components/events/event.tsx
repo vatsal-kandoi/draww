@@ -28,7 +28,7 @@ const LastEventComponent: React.FC<{count: number, i18n: I18n, handleEventCollap
                 <ListItemText primary={props.event.type}
                         secondary={
                             <>
-                                <Typography sx={{ display: 'inline', marginRight: "0.5em" }}
+                                <Typography sx={{ display: 'inline', marginRight: "0.3em" }}
                                         component="span"
                                         variant="body2"
                                         color="text.primary" >
@@ -59,7 +59,7 @@ const EventComponent: React.FC<{i18n: I18n, event: Event, onDeleteEvent: any, sh
             <ListItemText primary={props.event.type}
                     secondary={
                         <>
-                            <Typography sx={{ display: 'inline', marginRight: "0.5em" }}
+                            <Typography sx={{ display: 'inline', marginRight: "0.3em" }}
                                     component="span"
                                     variant="body2"
                                     color="text.primary" >

@@ -17,6 +17,8 @@ const canvasEventsReducer = (
         action: {type: CanvasEventType, payload: Event}
     ) => {
     switch (action.type) {
+        case CanvasEventType.LOAD:
+            return { ...state, events: action.payload }
         case CanvasEventType.ADD:
             return { ...state, events: [...state.events, action.payload] }
         case CanvasEventType.DELETE: 

@@ -8,8 +8,6 @@ import Collapse from '@mui/material/Collapse';
 import { useLanguageStore } from "../../hooks/languageprovider";
 import List from '@mui/material/List';
 import { EventComponent, LastEventComponent } from "./event";
-import { connect } from "react-redux";
-import { CanvasEventType } from "../../interfaces/enums";
 import { Event } from "../../structures/event";
 
 
@@ -62,17 +60,5 @@ const Events: React.FC<IEvents> = (props) => {
         </ButtonStack>
     );
 }
-
-const mapStateToProps = (state: any) => ({
-    events: state.events.events,
-}); 
-
-const mapDispatchToProps = (dispatch: any) => ({
-    registerEventDeletion: (event: Event) => dispatch({ 
-        type: CanvasEventType.DELETE,
-        payload: event
-    }),
-});
-
   
-export default connect(mapStateToProps, mapDispatchToProps)(Events);
+export default Events;

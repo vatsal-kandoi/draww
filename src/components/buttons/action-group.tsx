@@ -18,8 +18,13 @@ const ButtonStack = styled(Paper)(({ theme }) => ({
     width: "100%"
 }));
 
+interface IActionButtons {
+    onUploadEvents: any;
+    onDownloadEvents: any;
+}
 
-const ActionButtonGroup: React.FC<{}> = () => {
+
+const ActionButtonGroup: React.FC<IActionButtons> = (props) => {
     const i18n = useLanguageStore();
 
     return (
@@ -29,10 +34,12 @@ const ActionButtonGroup: React.FC<{}> = () => {
                     alignItems="center"
                     spacing={2} >
                 <IconButton id="upload"
+                        onClick={props.onUploadEvents}
                         aria-label={i18n.t("aria_buttons_upload")}>
                     <UploadIcon />
                 </IconButton>
                 <IconButton id="download"
+                        onClick={props.onDownloadEvents}
                         aria-label={i18n.t("aria_buttons_download")}>
                     <DownloadIcon />                    
                 </IconButton>
