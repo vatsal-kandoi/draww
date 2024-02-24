@@ -8,10 +8,10 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { I18n } from "i18n-js";
 import DeleteIcon from '@mui/icons-material/Delete';
-import { IEvent } from "../../interfaces/events";
+import { Event } from "../../structures/event";
 
 
-const LastEvent: React.FC<{count: number, i18n: I18n, handleEventCollapsibleEvent: any, isOpen: boolean, event: IEvent | null}> = (props) => {
+const LastEventComponent: React.FC<{count: number, i18n: I18n, handleEventCollapsibleEvent: any, isOpen: boolean, event: Event | null}> = (props) => {
     return (
         <ListItem alignItems="flex-start"
                 secondaryAction={
@@ -25,10 +25,10 @@ const LastEvent: React.FC<{count: number, i18n: I18n, handleEventCollapsibleEven
                     </Badge>
                 }>
             {(props.event !== null) ? (
-                <ListItemText primary={props.event.header}
+                <ListItemText primary={props.event.type}
                         secondary={
                             <>
-                                <Typography sx={{ display: 'inline', marginRight: "0.5em" }}
+                                <Typography sx={{ display: 'inline', marginRight: "0.3em" }}
                                         component="span"
                                         variant="body2"
                                         color="text.primary" >
@@ -44,22 +44,22 @@ const LastEvent: React.FC<{count: number, i18n: I18n, handleEventCollapsibleEven
     );
 }
 
-const Event: React.FC<{i18n: I18n, event: IEvent, onDeleteEvent: any, showDeleteOption: boolean}> = (props) => {    
+const EventComponent: React.FC<{i18n: I18n, event: Event, onDeleteEvent: any, showDeleteOption: boolean}> = (props) => {    
     return (
         <ListItem alignItems="flex-start"
                 secondaryAction={
                     <>
                         {(props.showDeleteOption ) ? (
-                            <IconButton onClick={() => props.onDeleteEvent(props.event.event_id)} aria-label={props.i18n.t("aria_messages_event_delete")}>
+                            <IconButton onClick={() => props.onDeleteEvent(props.event)} aria-label={props.i18n.t("aria_messages_event_delete")}>
                                 <DeleteIcon/>
                             </IconButton>
                         ) : null }
                     </>
                 }>
-            <ListItemText primary={props.event.header}
+            <ListItemText primary={props.event.type}
                     secondary={
                         <>
-                            <Typography sx={{ display: 'inline', marginRight: "0.5em" }}
+                            <Typography sx={{ display: 'inline', marginRight: "0.3em" }}
                                     component="span"
                                     variant="body2"
                                     color="text.primary" >
@@ -72,4 +72,4 @@ const Event: React.FC<{i18n: I18n, event: IEvent, onDeleteEvent: any, showDelete
     );}
 
 
-export {LastEvent, Event};
+export {LastEventComponent, EventComponent};

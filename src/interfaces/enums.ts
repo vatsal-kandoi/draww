@@ -7,10 +7,14 @@ export enum Themes {
     DARK = "dark",
 }
 
+export enum Shape { 
+    LINE = "LINE"
+}
+
 export enum CanvasActionType {
-    NONE,
-    PEN,
-    SQUARE
+    NONE = "NONE",
+    PEN = "Pen",
+    SQUARE = "Square"
 }
 
 export enum CanvasActionSelectionType {
@@ -27,4 +31,5 @@ export enum CanvasEventType {
     ADD = "ADD",
     DELETE = "DELETE",
     DELETE_CONFIRMED = "DELETE_CONFIRMED",
+    LOAD = "LOAD"
 }
