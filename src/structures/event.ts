@@ -1,11 +1,20 @@
+import { IAttributeOptions } from "../interfaces/attributeOptions";
 import { CanvasActionType } from "../interfaces/enums";
+import { IPoint } from "../interfaces/shapes";
 import { Line, createShapeFromJSON } from "./shape";
 
 class Event {
-    protected event_name: string;
+    public event_name: string;
+    public type: CanvasActionType = CanvasActionType.PEN;
+    public user_name: string;
+    public description: string;
+    protected shape: any;
 
-    constructor() {
+    constructor(user_name: string, description: string, shape: any) {
         this.event_name = this.getNewEventID();
+        this.description = description;
+        this.user_name = user_name;
+        this.shape = shape;
     }
 
     protected getNewEventID() {
@@ -20,30 +29,30 @@ class Event {
         }
         return result;
     }
+
+    public render(contextAPI: CanvasRenderingContext2D) {
+        throw new Error("Not implemented");
+    }
 }
 
 class PenEvent extends Event {
 
     public type: CanvasActionType = CanvasActionType.PEN;
-    private shape: Line[];
-    private user_name: string;
 
     constructor(user_name: string, shape: Line[]) {
-        super();
-        this.user_name = user_name;
-        this.shape = shape;
+        super(user_name, `created ${shape.length} lines`, shape);
     }
 
     public exportToJson() {
         return {
             user_name: this.user_name,
             type: this.type,
-            shape: this.shape.forEach((shape) => shape.exportToJson()),
+            shape: (this.shape as Line[]).forEach((shape) => shape.exportToJson()),
         }
     }
 
     public render(contextAPI: CanvasRenderingContext2D) {
-        this.shape.forEach((shape) => {
+        (this.shape as Line[]).forEach((shape) => {
             shape.render(contextAPI);
         })
     }
@@ -51,11 +60,73 @@ class PenEvent extends Event {
 
 const createEventFromJSON = (eventJson: any): any => {
     if (eventJson.type === CanvasActionType.PEN) 
-        return new PenEvent(
+        return createEvent(
+            CanvasActionType.PEN, 
             eventJson.user_name as string,
             eventJson.shape.forEach((shapeJson: any) => createShapeFromJSON(shapeJson)),
-        )
+        );
 
+}
+
+const createEvent = (type: CanvasActionType, user_name: string, shape: any): Event | null => {
+    if (type === CanvasActionType.PEN) 
+        return new PenEvent(
+            user_name,
+            shape,
+        )
+        
+    return null;
+}
+
+class EventCaptureManager {
+    private actionType: CanvasActionType;
+    private attributes: IAttributeOptions;
+    private shape: any;
+
+    private generateDefaultShape(actionType: CanvasActionType) {
+        if (actionType === CanvasActionType.PEN) {
+            return [];
+        }
+        return null;
+    }
+
+    constructor(actionType: CanvasActionType, attributes: IAttributeOptions) {
+        this.actionType = actionType;
+        this.attributes = attributes;
+        this.shape = this.generateDefaultShape(actionType);
+    }
+
+    public clear() {
+        this.shape = this.generateDefaultShape(this.actionType);
+    }
+
+    public isEquals(self: any, other: any) {
+        if (this.actionType === CanvasActionType.PEN) {
+            return self.length === other.length && self.every((value: Line, index: number) => value === other[index]);
+        }
+        return true;
+    }
+
+    public hasCapturedShape() {
+        return !this.isEquals(this.shape, this.generateDefaultShape(this.actionType));
+    }
+
+    public generateEvent(user_name: string) {
+        const shape = this.shape;
+        this.clear();
+        return createEvent(this.actionType, user_name, shape);
+    }
+
+    private registerLineOnCanvas(current: IPoint, previous: IPoint, context: CanvasRenderingContext2D) { 
+        const shape = new Line(previous, current, this.attributes.color);
+        shape.render(context);
+        this.shape.push(shape);
+    }
+
+    public registerShapeOnCanvas(current: IPoint, previous: IPoint, context: CanvasRenderingContext2D) { 
+        if (this.actionType === CanvasActionType.PEN)
+            return this.registerLineOnCanvas(current, previous, context);
+    }
 }
 
 
@@ -67,6 +138,21 @@ class EventManager {
         this.events = [];
     }
 
+    public clear() {
+        this.events = [];
+    }
+
+    public getLastEvent(): Event | null {
+        return (this.events.length > 0) ? this.events[this.events.length - 1] : null
+    }
+
+    public addEvent(event: Event): void {
+        this.events.push(event);
+    }
+
+    public removeEvent(event: Event): void {
+        this.events = this.events.filter((ev: Event) => ev.event_name !== event.event_name );
+    }
 
     public loadFromJson(eventsJson: any) {
         this.events = eventsJson.events.forEach((eventJson: any) => createEventFromJSON(eventJson));
@@ -79,6 +165,4 @@ class EventManager {
     }
 }
 
-
-
-export { createEventFromJSON, PenEvent, EventManager }; 
+export { createEventFromJSON, createEvent, Event, PenEvent, EventManager, EventCaptureManager }; 

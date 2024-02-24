@@ -1,12 +1,11 @@
 import { RefObject, useEffect } from "react";
-import { IEvent } from "../interfaces/events";
 import { useSelector, useDispatch } from "react-redux";
 import { CanvasEventType } from "../interfaces/enums";
-import { ILine } from "../interfaces/shapes";
+import { Event } from "../structures/event";
 
 const useEventDeletionEvents = (canvasRef: RefObject<HTMLCanvasElement>) => {
-    const eventsDeleted: IEvent[] = useSelector(state => (state as any)?.events?.eventsToBeRemoved)    
-    const allEvents: IEvent[] = useSelector(state => (state as any)?.events?.events)    
+    const eventsDeleted: Event[] = useSelector(state => (state as any)?.events?.deletedEvents)    
+    const allEvents: Event[] = useSelector(state => (state as any)?.events?.events)    
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -18,16 +17,8 @@ const useEventDeletionEvents = (canvasRef: RefObject<HTMLCanvasElement>) => {
 
         context.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
         
-        allEvents.forEach((event) => {
-            console.log(event)
-            event.shape.forEach((line: ILine) => {
-                context.strokeStyle = line.color;
-                context.beginPath();
-                context.moveTo(line.fromCoords.x, line.fromCoords.y);
-                context.lineTo(line.toCoords.x, line.toCoords.y);
-                context.closePath();
-                context.stroke();                   
-            })
+        allEvents.forEach((event: Event) => {
+            event.render(context);
         })
 
         dispatch({type: CanvasEventType.DELETE_CONFIRMED })        

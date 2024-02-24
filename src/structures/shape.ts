@@ -1,7 +1,11 @@
 import { Shape } from "../interfaces/enums";
 import { IPoint } from "../interfaces/shapes";
 
-class Line {
+class ShapeBase {
+
+}
+
+class Line extends ShapeBase {
 
     private fromCoords: IPoint;
     private toCoords: IPoint;
@@ -9,6 +13,7 @@ class Line {
     public type: Shape = Shape.LINE;
 
     constructor(fromCoords: IPoint, toCoords: IPoint, color: string) {
+        super();
         this.fromCoords = fromCoords;
         this.toCoords = toCoords;
         this.color = color;
@@ -42,5 +47,4 @@ const createShapeFromJSON = (shapeJson: any): any => {
         )
 }
 
-
-export { createShapeFromJSON, Line }; 
+export { createShapeFromJSON, ShapeBase, Line }; 

@@ -7,10 +7,10 @@ import Divider from '@mui/material/Divider';
 import Collapse from '@mui/material/Collapse';
 import { useLanguageStore } from "../../hooks/languageprovider";
 import List from '@mui/material/List';
-import { Event, LastEvent } from "./event";
-import { IEvent } from "../../interfaces/events";
+import { EventComponent, LastEventComponent } from "./event";
 import { connect } from "react-redux";
 import { CanvasEventType } from "../../interfaces/enums";
+import { Event } from "../../structures/event";
 
 
 const ButtonStack = styled(Paper)(({ theme }) => ({
@@ -24,8 +24,8 @@ const ButtonStack = styled(Paper)(({ theme }) => ({
 
 
 interface IEvents {
-    events: IEvent[],
-    onDeleteEvent: any,
+    events: Event[],
+    registerEventDeletion: any,
 }
 
 const Events: React.FC<IEvents> = (props) => {
@@ -42,7 +42,7 @@ const Events: React.FC<IEvents> = (props) => {
                 <EventsBar />
                 <Divider />
                 <List>
-                    <LastEvent count={props.events.length} 
+                    <LastEventComponent count={props.events.length} 
                             isOpen={open} 
                             i18n={i18n} 
                             handleEventCollapsibleEvent={handleEventCollapsibleEvent}
@@ -51,8 +51,8 @@ const Events: React.FC<IEvents> = (props) => {
                     <Collapse in={open} timeout="auto">
                         <List component="div" disablePadding={true} style={{maxHeight: '300px', overflow: 'auto'}} >
                             {props.events.map((ev) => {
-                                return (<Event showDeleteOption={true}
-                                    onDeleteEvent={props.onDeleteEvent}
+                                return (<EventComponent showDeleteOption={true}
+                                    onDeleteEvent={props.registerEventDeletion}
                                     i18n={i18n} event={ev} />);
                             })}
                         </List>
@@ -68,9 +68,9 @@ const mapStateToProps = (state: any) => ({
 }); 
 
 const mapDispatchToProps = (dispatch: any) => ({
-    onDeleteEvent: (event_id: string ) => dispatch({ 
+    registerEventDeletion: (event: Event) => dispatch({ 
         type: CanvasEventType.DELETE,
-        payload: event_id
+        payload: event
     }),
 });
 

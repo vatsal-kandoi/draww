@@ -12,9 +12,9 @@ export enum Shape {
 }
 
 export enum CanvasActionType {
-    NONE,
-    PEN,
-    SQUARE
+    NONE = "NONE",
+    PEN = "Pen",
+    SQUARE = "Square"
 }
 
 export enum CanvasActionSelectionType {

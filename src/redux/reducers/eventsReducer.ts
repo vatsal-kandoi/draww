@@ -1,29 +1,28 @@
 import { CanvasEventType } from "../../interfaces/enums";
-import { IEvent } from "../../interfaces/events";
+import { Event } from "../../structures/event";
 
-interface ICanvasEvent extends IEvent {}
 
 interface ICanvasEvents {
-    events: ICanvasEvent[],
-    eventsToBeRemoved: ICanvasEvent[],
+    events: Event[],
+    deletedEvents: Event[],
 }
 
 const initialState: ICanvasEvents = {
     events: [],
-    eventsToBeRemoved: [],
+    deletedEvents: [],
 };
   
 const canvasEventsReducer = (
         state: ICanvasEvents = initialState, 
-        action: {type: CanvasEventType, payload: ICanvasEvent | string}
+        action: {type: CanvasEventType, payload: Event}
     ) => {
     switch (action.type) {
         case CanvasEventType.ADD:
-            return { events: [ ...state.events, action.payload, ] }
+            return { ...state, events: [...state.events, action.payload] }
         case CanvasEventType.DELETE: 
-            return { events: state.events.filter((ev) => ev.event_id !==  action.payload ), eventsToBeRemoved: state.events.filter((ev) => ev.event_id ===  action.payload ) }
+            return { ...state, events: state.events.filter(event => event.event_name !== action.payload.event_name), deletedEvents: [action.payload] }
         case CanvasEventType.DELETE_CONFIRMED: 
-            return { ...state, eventsToBeRemoved: [] }
+            return { ...state, deletedEvents: [] }
       default:
         return state;
     }

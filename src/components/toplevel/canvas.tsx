@@ -6,8 +6,10 @@ import { useLanguageStore } from "../../hooks/languageprovider";
 import { styled } from '@mui/material/styles';
 import { Paper } from "@mui/material";
 import { useMousePositions, useMousePress } from "../../hooks/mousePositionProvider";
-import { renderObjectOntoCanvas } from "../factory";
 import useEventDeletionEvents from "../../hooks/eventDeletionProvider";
+import { Event, createEvent } from "../../structures/event";
+import { Line } from "../../structures/shape";
+import useEventCaptureManager from "../../hooks/eventCaptureManager";
 
 
 const CanvasContainer = styled(Paper)(({ theme }) => ({
@@ -19,21 +21,10 @@ const CanvasContainer = styled(Paper)(({ theme }) => ({
     height: "100%"
 }));
 
-interface ICanvasProps extends IAttributeOptions {
+interface ICanvasProps {
     selectedCanvasAction: CanvasActionType,
-    onNewEvent: any,
-}
-
-function makeEventID(length: number) {
-    let result = '';
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    const charactersLength = characters.length;
-    let counter = 0;
-    while (counter < length) {
-      result += characters.charAt(Math.floor(Math.random() * charactersLength));
-      counter += 1;
-    }
-    return result;
+    registerNewEvent: any,
+    attributes: IAttributeOptions
 }
 
 const Canvas: React.FC<ICanvasProps> = (props) => {
@@ -43,46 +34,37 @@ const Canvas: React.FC<ICanvasProps> = (props) => {
     const canvasRef = React.useRef<HTMLCanvasElement>(null)
     const {current, previous} = useMousePositions(captureMousePosition);
     const isMousePressed = useMousePress(captureMousePosition);
+    const captureManager = useEventCaptureManager(props.selectedCanvasAction, props.attributes);
 
     useEventDeletionEvents(canvasRef)
 
-    const [capture, setCapture] = React.useState<{capturing: boolean, shape: any}>({ capturing: false, shape: null });
-
-
     React.useEffect(() => {
         if (isMousePressed) {
+            
             if (canvasRef.current === null) return;
-
             const context = canvasRef.current.getContext("2d");
             if (context === null) return;
-    
-            const shape = renderObjectOntoCanvas(
-                props.selectedCanvasAction, 
-                current, 
-                previous,
-                { color: props.color, },
-                context
-            );
-            setCapture((prevState) => { return { capturing: true, shape: [ ...(prevState.shape || []), shape ] }});
+
+            captureManager.registerShapeOnCanvas(previous, current, context);
         } else {
-            if (props.selectedCanvasAction === CanvasActionType.NONE) {
-
+            if (captureManager.hasCapturedShape()) {
+                const event = captureManager.generateEvent("Vatsal")
+                props.registerNewEvent(event);    
             }
-            if (capture.capturing) {
-                props.onNewEvent(capture.shape, `added ${capture.shape.length} lines`, "Pen" );
-            }
-            setCapture({ capturing: false, shape: null });
         }
-    }, [current, previous, isMousePressed, props.color, props.selectedCanvasAction]);
-
-
+    }, [current, previous, isMousePressed, captureManager]);
 
     React.useEffect(() => {
         if (canvasContainerRef.current === null) return ;
         if (canvasRef.current === null) return;
         canvasRef.current.style.width ='100%';
         canvasRef.current.style.height='100%';
-        canvasRef.current.style.backgroundColor = "inherit";
+        canvasRef.current.style.backgroundColor = "inherit";        
+        canvasRef.current.style.margin = "0px";
+        canvasRef.current.style.padding = "0px";
+
+        console.log(canvasRef.current.offsetHeight)
+        console.log(canvasRef.current.offsetWidth)
         canvasRef.current.width  = canvasRef.current.offsetWidth;
         canvasRef.current.height = canvasRef.current.offsetHeight;
     }, []);
@@ -92,7 +74,7 @@ const Canvas: React.FC<ICanvasProps> = (props) => {
                 elevation={0}
                 onMouseEnter={() => setCaptureMousePosition(true)}
                 onMouseLeave={() => setCaptureMousePosition(false)}>
-            <canvas style={{cursor: "pointer"}}
+            <canvas style={{cursor: "pointer", display: "block"}}
                     ref={canvasRef}>
                 {i18n.t("messages_unsupportedbrowser")}      
             </canvas>
@@ -103,14 +85,14 @@ const Canvas: React.FC<ICanvasProps> = (props) => {
 
 const mapStateToProps = (state: any) => ({
     selectedCanvasAction: state.selectedCanvasAction.activeCanvasActionType,
-    color: state.attributes.color
+    attributes: state.attributes
 }); 
 
 
 const mapDispatchToProps = (dispatch: any) => ({
-    onNewEvent: (shape: any, description: string, header: string) => dispatch({ 
+    registerNewEvent: (event: Event) => dispatch({ 
         type: CanvasEventType.ADD,
-        payload: { user_name: "Vatsal", shape: shape, description: description, header: header, event_id: makeEventID(10) }
+        payload: event
     }),
 });
   
