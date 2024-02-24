@@ -14,9 +14,8 @@ const useCanvasDisplayManager = (captureManager: EventCaptureManager,
     const allEventsInState: Event[] = useSelector(state => (state as any)?.events?.events)    
 
     React.useEffect(() => {
-        console.log(allEventsInState);
-        console.log(currentEventsOnCanvas)
-        if (allEventsInState.every((event, index) => currentEventsOnCanvas[index]?.isEqual(event))) return;
+        if (allEventsInState.length === currentEventsOnCanvas.length && allEventsInState.every((event, index) => currentEventsOnCanvas[index]?.isEqual(event))) 
+            return;
         if(canvasRef.current === null) return;
 
         const context = canvasRef.current.getContext("2d");
@@ -25,8 +24,8 @@ const useCanvasDisplayManager = (captureManager: EventCaptureManager,
         context.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
         allEventsInState.forEach((event: Event) => {
             event.render(context);
-        })
-
+        });
+        setCurrentEventsOnCanvas(allEventsInState);
     }, [allEventsInState]);
             
     React.useEffect(() => {
