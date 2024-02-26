@@ -20,6 +20,8 @@ interface IEvents {
     events: Event[],
     registerEventDeletion: any,
     loadEventsFromJSON: any,
+    clearAllEvents: any,
+    userCount: number,
 }
 
 const EventsMenu: React.FC<IEvents> = (props) => {
@@ -61,6 +63,8 @@ const EventsMenu: React.FC<IEvents> = (props) => {
             <ActionButtonGroup onDownloadEvents={onDownloadEvents} 
                     onUploadEvents={onUploadEvents} />
             <Events events={props.events} 
+                    userCount={props.userCount}
+                    clearAllEvents={props.clearAllEvents}
                     registerEventDeletion={props.registerEventDeletion}/>            
         </ButtonStack>
     )
@@ -68,12 +72,16 @@ const EventsMenu: React.FC<IEvents> = (props) => {
 
 const mapStateToProps = (state: any) => ({
     events: state.events.events,
+    userCount: state.events.users.size,
 }); 
 
 const mapDispatchToProps = (dispatch: any) => ({
     registerEventDeletion: (event: Event) => dispatch({ 
         type: CanvasEventType.DELETE,
         payload: event
+    }),
+    clearAllEvents: () => dispatch({
+        type: CanvasEventType.CLEAR_ALL,
     }),
     loadEventsFromJSON: (events: Event[]) => dispatch({ 
         type: CanvasEventType.LOAD,

@@ -21,11 +21,9 @@ const EventBarStack = styled(Stack)(({ theme }) => ({
     paddingRight: theme.spacing(1),
 }));
 
-const getUserCountInEventStore = () => 3;
 
-const EventsBar: React.FC<{}> = () => {
+const EventsBar: React.FC<{userCount: number, clearAllEvents: any}> = (props) => {
     const i18n = useLanguageStore();
-    const userCount = getUserCountInEventStore();
 
     return (
         <EventBarStack direction="row"
@@ -39,10 +37,11 @@ const EventsBar: React.FC<{}> = () => {
                     justifyContent="flex-end" 
                     alignItems="center" >
                 <IconButton size="small" 
+                        onClick={props.clearAllEvents}
                         aria-label={i18n.t("aria_buttons_events_reset")}>
                     <DeleteIcon />
                 </IconButton>
-                <SpacedBadge badgeContent={userCount} 
+                <SpacedBadge badgeContent={props.userCount} 
                         color="secondary"
                         aria-label={i18n.t("aria_messages_user_count")}>
                   <PersonIcon />

@@ -24,6 +24,8 @@ const ButtonStack = styled(Paper)(({ theme }) => ({
 interface IEvents {
     events: Event[],
     registerEventDeletion: any,
+    clearAllEvents: any,
+    userCount: number,
 }
 
 const Events: React.FC<IEvents> = (props) => {
@@ -37,7 +39,8 @@ const Events: React.FC<IEvents> = (props) => {
     return (
         <ButtonStack square={false} elevation={1}>
             <Stack direction="column">
-                <EventsBar />
+                <EventsBar userCount={props.userCount} 
+                        clearAllEvents={props.clearAllEvents}/>
                 <Divider />
                 <List>
                     <LastEventComponent count={props.events.length} 
