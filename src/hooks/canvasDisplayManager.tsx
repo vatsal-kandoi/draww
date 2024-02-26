@@ -12,6 +12,7 @@ const useCanvasDisplayManager = (captureManager: EventCaptureManager,
     const [newEvent, setNewEvent] = React.useState<Event>();
     const [currentEventsOnCanvas, setCurrentEventsOnCanvas] = React.useState<Event[]>([]);
     const allEventsInState: Event[] = useSelector(state => (state as any)?.events?.events)    
+    const user: string = useSelector(state => (state as any)?.user?.user_name)    
 
     React.useEffect(() => {
         if (allEventsInState.length === currentEventsOnCanvas.length && allEventsInState.every((event, index) => currentEventsOnCanvas[index]?.isEqual(event))) 
@@ -37,13 +38,13 @@ const useCanvasDisplayManager = (captureManager: EventCaptureManager,
             captureManager.registerShapeOnCanvas(previous, current, context);
         } else {
             if (captureManager.hasCapturedShape()) {
-                const event = captureManager.generateEvent("Vatsal")
+                const event = captureManager.generateEvent(user)
                 if (event === null) return;
                 setCurrentEventsOnCanvas((state) => {return [...state, event]});
                 setNewEvent(event);
             }
         }
-    }, [current, previous, isMousePressed, captureManager]);
+    }, [current, previous, isMousePressed, captureManager, user]);
     
     return newEvent;
 };

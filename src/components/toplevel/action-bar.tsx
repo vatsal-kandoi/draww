@@ -5,7 +5,6 @@ import { styled } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
 import { useLanguageStore } from "../../hooks/languageprovider";
 import ModeIcon from '@mui/icons-material/Mode';
-import CropSquareIcon from '@mui/icons-material/CropSquare';
 import { connect } from "react-redux";
 import {CanvasActionSelectionType, CanvasActionType} from "../../interfaces/enums";
 
