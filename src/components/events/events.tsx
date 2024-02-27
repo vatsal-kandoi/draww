@@ -9,6 +9,7 @@ import { useLanguageStore } from "../../hooks/languageprovider";
 import List from '@mui/material/List';
 import { EventComponent, LastEventComponent } from "./event";
 import { Event } from "../../structures/event";
+import { useNavigate } from "react-router-dom";
 
 
 const ButtonStack = styled(Paper)(({ theme }) => ({
@@ -31,6 +32,11 @@ interface IEvents {
 const Events: React.FC<IEvents> = (props) => {
     const i18n = useLanguageStore();
     const [open, setOpen] = React.useState(true);
+    const navigate = useNavigate();
+
+    const playEvents = () => {
+        navigate("/player");
+    };
 
     const handleEventCollapsibleEvent = () => {
       setOpen(!open);
@@ -39,7 +45,8 @@ const Events: React.FC<IEvents> = (props) => {
     return (
         <ButtonStack square={false} elevation={1}>
             <Stack direction="column">
-                <EventsBar userCount={props.userCount} 
+                <EventsBar playEvents={playEvents} 
+                        userCount={props.userCount} 
                         clearAllEvents={props.clearAllEvents}/>
                 <Divider />
                 <List>

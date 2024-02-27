@@ -9,6 +9,8 @@ import store from './redux/store';
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import CanvasPage from './pages/main';
 import AuthPage from './pages/auth';
+import PlayerPage from "./pages/player";
+import PrivateRoute from './components/private-route';
 
 const App: React.FC<{}> = () => {
   const {themeContextValue, theme} = useThemeProvider();
@@ -21,9 +23,13 @@ const App: React.FC<{}> = () => {
           <LanguageProviderContext.Provider value={languageContextValue}>        
             <ThemeProvider theme={theme}>
               <Routes>
-                <Route path="/" Component={AuthPage}>
+                <Route path="/" element={<AuthPage />}>
                 </Route>
-                <Route path="/home/" Component={CanvasPage} />
+                <Route path="/home/" element={
+                    <PrivateRoute>
+                      <CanvasPage />
+                    </PrivateRoute>} />
+                <Route path="/player/" element={<PlayerPage />} />
               </Routes>
             </ThemeProvider>
           </LanguageProviderContext.Provider>

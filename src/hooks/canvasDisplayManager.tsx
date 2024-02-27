@@ -3,40 +3,45 @@ import { IPoint } from "../interfaces/shapes";
 import { Event, EventCaptureManager } from "../structures/event";
 import * as React from "react";
 import { useSelector } from "react-redux";
+import { ICanvasRefs } from "../components/canvas/canvas-base";
+import { DEFAULT_NULL_POINT, useMouseCurrentPositionProvider, useMousePressProvider } from "./mousePositionProvider";
 
-const useCanvasDisplayManager = (captureManager: EventCaptureManager, 
-        canvasRef: RefObject<HTMLCanvasElement>, 
-        current: IPoint, 
-        previous: IPoint, 
-        isMousePressed: boolean): Event | undefined => {
+const useCanvasDisplayManager = (
+    captureManager: EventCaptureManager, canvasRef: ICanvasRefs | null): Event | undefined => {
+    const currentPosition = useMouseCurrentPositionProvider();
+    const {mouseClickPosition, isMouseClicked} =  useMousePressProvider();
+
     const [newEvent, setNewEvent] = React.useState<Event>();
     const [currentEventsOnCanvas, setCurrentEventsOnCanvas] = React.useState<Event[]>([]);
+    const [prevOrInitialPosition, setPrevPosition] = React.useState<IPoint>(DEFAULT_NULL_POINT);
     const allEventsInState: Event[] = useSelector(state => (state as any)?.events?.events)    
     const user: string = useSelector(state => (state as any)?.user?.user_name)    
 
     React.useEffect(() => {
         if (allEventsInState.length === currentEventsOnCanvas.length && allEventsInState.every((event, index) => currentEventsOnCanvas[index]?.isEqual(event))) 
             return;
-        if(canvasRef.current === null) return;
-
-        const context = canvasRef.current.getContext("2d");
-        if (context === null) return;
-
-        context.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+        if(canvasRef === null) return;
+        canvasRef.clearCanvas();
         allEventsInState.forEach((event: Event) => {
-            event.render(context);
+            canvasRef.renderEventOnCanvas(event);
         });
         setCurrentEventsOnCanvas(allEventsInState);
-    }, [allEventsInState]);
+    }, [allEventsInState, canvasRef]);
             
     React.useEffect(() => {
-        if (isMousePressed) {            
-            if (canvasRef.current === null) return;
-            const context = canvasRef.current.getContext("2d");
-            if (context === null) return;
-
-            captureManager.registerShapeOnCanvas(previous, current, context);
+        console.log(isMouseClicked, prevOrInitialPosition, currentPosition)
+        if (isMouseClicked) {            
+            if(prevOrInitialPosition === DEFAULT_NULL_POINT && mouseClickPosition !== DEFAULT_NULL_POINT) {
+                setPrevPosition(mouseClickPosition);
+                return;
+            }
+            setPrevPosition(currentPosition);
+            if(canvasRef === null) return;
+            const context = canvasRef.canvasRef?.getContext("2d");
+            if (context === null || context === undefined) return;
+            captureManager.registerShapeOnCanvas(prevOrInitialPosition, currentPosition, context);
         } else {
+            setPrevPosition(DEFAULT_NULL_POINT);
             if (captureManager.hasCapturedShape()) {
                 const event = captureManager.generateEvent(user)
                 if (event === null) return;
@@ -44,7 +49,7 @@ const useCanvasDisplayManager = (captureManager: EventCaptureManager,
                 setNewEvent(event);
             }
         }
-    }, [current, previous, isMousePressed, captureManager, user]);
+    }, [currentPosition, isMouseClicked, mouseClickPosition, captureManager, user]);
     
     return newEvent;
 };

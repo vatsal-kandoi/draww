@@ -44,7 +44,7 @@ const LastEventComponent: React.FC<{count: number, i18n: I18n, handleEventCollap
     );
 }
 
-const EventComponent: React.FC<{i18n: I18n, event: Event, onDeleteEvent: any, showDeleteOption: boolean}> = (props) => {    
+const EventComponent: React.FC<{i18n: I18n, event: Event, onDeleteEvent?: any, showDeleteOption: boolean}> = (props) => {    
     return (
         <ListItem alignItems="flex-start"
                 secondaryAction={

@@ -7,6 +7,7 @@ import Badge from '@mui/material/Badge';
 import PersonIcon from '@mui/icons-material/Person';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { IconButton } from "@mui/material";
+import { PlayArrow } from "@mui/icons-material";
 
 
 const SpacedBadge = styled(Badge)(({ theme }) => ({
@@ -22,7 +23,7 @@ const EventBarStack = styled(Stack)(({ theme }) => ({
 }));
 
 
-const EventsBar: React.FC<{userCount: number, clearAllEvents: any}> = (props) => {
+const EventsBar: React.FC<{playEvents: any, userCount: number, clearAllEvents: any}> = (props) => {
     const i18n = useLanguageStore();
 
     return (
@@ -36,6 +37,11 @@ const EventsBar: React.FC<{userCount: number, clearAllEvents: any}> = (props) =>
             <Stack direction="row" 
                     justifyContent="flex-end" 
                     alignItems="center" >
+                <IconButton id="actions_play_events"
+                        size="small"
+                        onClick={props.playEvents}>
+                    <PlayArrow />
+                </IconButton>                        
                 <IconButton size="small" 
                         onClick={props.clearAllEvents}
                         aria-label={i18n.t("aria_buttons_events_reset")}>
