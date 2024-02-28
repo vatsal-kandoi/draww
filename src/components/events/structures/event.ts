@@ -25,7 +25,7 @@ const createEvent = (type: CanvasActionType, user_name: string, shape: any): Eve
             user_name,
             shape as Line[],
         )
-        
+
     throw new Error("Unsupported action type present in the JSON")
 }
 
