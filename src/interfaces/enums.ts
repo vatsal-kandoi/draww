@@ -1,5 +1,6 @@
 export enum Languages {
-    EN = "English",
+    EN = "en",
+    ESP = "esp"
 }
 
 export enum Themes {

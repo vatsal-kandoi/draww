@@ -1,3 +1,4 @@
+import { Languages } from "../interfaces/enums";
 import { EventBase } from "./events/structures/base";
 import { exportEventsToJSON, loadEventsFromJSON } from "./events/structures/event";
 
@@ -34,4 +35,22 @@ export function onUploadEvents (cb: (events: EventBase[]) => void) {
         reader.onload = onLoad;
         reader.readAsText(selectedFiles[0]);            
     }
+}
+
+export function getLanguageName(code: Languages) {
+    if (code === Languages.EN) {
+        return "English";
+    } else if (code === Languages.ESP) {
+        return "Espanol"
+    }
+    return "English";    
+}
+
+export function getLanguageCode(language: string) {
+    if (language === "English") {
+        return Languages.EN;
+    } else if (language === "Espanol") {
+        return Languages.ESP;
+    }
+    return Languages.EN;
 }
