@@ -1,11 +1,11 @@
 import * as React from "react";
-import ActionButtonGroup from '../buttons/action-group';
 import Stack from '@mui/material/Stack';
 import { styled } from '@mui/material/styles';
 import Events from "../events/events";
 import { CanvasEventType } from "../../interfaces/enums";
 import { connect } from "react-redux";
-import { Event, exportEventsToJSON, loadEventsFromJSON } from "../../structures/event";
+import { EventBase, exportEventsToJSON, loadEventsFromJSON } from "../events/structures/event";
+import PageActions from "../button-groups/page-actions";
 
 const ButtonStack = styled(Stack)(({ theme }) => ({
     ...theme.typography.body2,
@@ -17,7 +17,7 @@ const ButtonStack = styled(Stack)(({ theme }) => ({
 
 
 interface IEvents {
-    events: Event[],
+    events: EventBase[],
     registerEventDeletion: any,
     loadEventsFromJSON: any,
     clearAllEvents: any,
@@ -60,8 +60,10 @@ const EventsMenu: React.FC<IEvents> = (props) => {
         <ButtonStack direction="column"
                 alignItems="center"
                 spacing={2} >
-            <ActionButtonGroup onDownloadEvents={onDownloadEvents} 
-                    onUploadEvents={onUploadEvents} />
+            <PageActions showEventsDownloadBtn={true}
+                    showEventsUploadBtn={true}
+                    onEventsDownloadBtnClick={onDownloadEvents}
+                    onEventsUploadBtnClick={onUploadEvents} />
             <Events events={props.events} 
                     userCount={props.userCount}
                     clearAllEvents={props.clearAllEvents}

@@ -8,10 +8,10 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { I18n } from "i18n-js";
 import DeleteIcon from '@mui/icons-material/Delete';
-import { Event } from "../../structures/event";
+import { EventBase } from "./structures/event";
 
 
-const LastEventComponent: React.FC<{count: number, i18n: I18n, handleEventCollapsibleEvent: any, isOpen: boolean, event: Event | null}> = (props) => {
+const LastEventComponent: React.FC<{count: number, i18n: I18n, handleEventCollapsibleEvent: any, isOpen: boolean, event: EventBase | null}> = (props) => {
     return (
         <ListItem alignItems="flex-start"
                 secondaryAction={
@@ -44,7 +44,7 @@ const LastEventComponent: React.FC<{count: number, i18n: I18n, handleEventCollap
     );
 }
 
-const EventComponent: React.FC<{i18n: I18n, event: Event, onDeleteEvent?: any, showDeleteOption: boolean}> = (props) => {    
+const EventComponent: React.FC<{i18n: I18n, event: EventBase, onDeleteEvent?: any, showDeleteOption: boolean}> = (props) => {    
     return (
         <ListItem alignItems="flex-start"
                 secondaryAction={

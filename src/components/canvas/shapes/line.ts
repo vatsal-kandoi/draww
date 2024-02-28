@@ -1,9 +1,7 @@
-import { Shape } from "../interfaces/enums";
-import { IPoint } from "../interfaces/shapes";
+import { ShapeBase } from "./base";
+import { IPoint } from "../../../interfaces/shapes";
+import { Shape } from "../../../interfaces/enums";
 
-class ShapeBase {
-
-}
 
 class Line extends ShapeBase {
 
@@ -38,13 +36,4 @@ class Line extends ShapeBase {
     }
 }
 
-const createShapeFromJSON = (shapeJson: any): any => {
-    if (shapeJson.type === Shape.LINE) 
-        return new Line(
-            shapeJson.fromCoords as IPoint, 
-            shapeJson.toCoords as IPoint,
-            shapeJson.color as string,
-        )
-}
-
-export { createShapeFromJSON, ShapeBase, Line }; 
+export { Line }; 

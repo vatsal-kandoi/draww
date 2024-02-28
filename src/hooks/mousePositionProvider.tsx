@@ -3,75 +3,73 @@ import { IPoint } from "../interfaces/shapes";
 
 export const DEFAULT_NULL_POINT = { x: -1, y: -1 };
 
-export const useMouseCurrentPositionProvider = (): IPoint => {
-    const [positions, setPositions] = React.useState<IPoint>(DEFAULT_NULL_POINT);
-
-    const updatePositions = (x: number, y: number) => setPositions({ x, y });
-
-    const handleTouchMove = (event: TouchEvent) => updatePositions(
-            event.changedTouches[0].clientX, 
-            event.changedTouches[0].clientY
-        )
-    const handleMouseMove = (event: MouseEvent) => updatePositions(
-            event.clientX, 
-            event.clientY
-        )
-
-    React.useEffect(() => {                     
-            window.addEventListener('mousemove', handleMouseMove);
-            window.addEventListener('touchmove', handleTouchMove);
-
-        return () => {
-            window.removeEventListener('mousemove', handleMouseMove);
-            window.removeEventListener('touchmove', handleTouchMove);
-
-        }
-    });
-
-    return positions;
-}
-
-export const useMousePressProvider = (): { mouseClickPosition: IPoint, isMouseClicked: boolean } => {    
-    const [position, setPosition] = React.useState<IPoint>(DEFAULT_NULL_POINT);
+/**
+ * Listen for the mouse's current position on the screen 
+ * @returns Current mouse position
+ */
+export const useMouseCurrentPositionProvider = (): {
+    clickPosition: IPoint,
+    currentPositions: IPoint,
+    onClick: boolean
+ } => {
+    const [clickPositions, setClickPositions] = React.useState<IPoint>(DEFAULT_NULL_POINT);
     const [isMouseClicked, setIsMouseClicked] = React.useState<boolean>(false);
+    const [currentPositions, setCurrentPositions] = React.useState<IPoint>(DEFAULT_NULL_POINT);
 
-    const updatePositions = (x: number, y: number) => setPosition({ x, y });
+    const updateCurrentPositions = (x: number, y: number) => {
+        setCurrentPositions({ x, y });
+    }
+    const updateClickPositions = (x: number, y: number) => {
+        setCurrentPositions({ x, y })
+        setClickPositions({ x, y });
+        setIsMouseClicked(true);
+    }
+    const setMouseRelease = () => {
+        setIsMouseClicked(false);
+    } 
 
-    const handleTouchDown = (event: TouchEvent) => {
-        console.log(event);
-        updatePositions(
+    const handleTouchMove = (event: TouchEvent) => updateCurrentPositions(
             event.changedTouches[0].clientX, 
             event.changedTouches[0].clientY
         )
-        setIsMouseClicked(true)
-    }
-    const handleMouseDown = (event: MouseEvent) => {
-        updatePositions(
+    const handleMouseMove = (event: MouseEvent) => updateCurrentPositions(
             event.clientX, 
             event.clientY
         )
-        setIsMouseClicked(true)
-    }    
-    const handleTouchOrMouseUp = (event: MouseEvent | TouchEvent) => {
-        console.log(event);
-        setIsMouseClicked(false);
-        updatePositions(DEFAULT_NULL_POINT.x, DEFAULT_NULL_POINT.y);
-    }
-        
-    React.useEffect(() => {
+
+    const handleTouchDown = (event: TouchEvent) => updateClickPositions( 
+        event.changedTouches[0].clientX, 
+        event.changedTouches[0].clientY
+    )
+
+    const handleMouseDown = (event: MouseEvent) =>  updateClickPositions( 
+        event.clientX, 
+        event.clientY
+    )
+
+    const handleTouchOrMouseUp = (event: MouseEvent | TouchEvent) => setMouseRelease();            
+    
+    React.useEffect(() => {                     
+        window.addEventListener('mousemove', handleMouseMove);
+        window.addEventListener('touchmove', handleTouchMove);
         window.addEventListener('mouseup', handleTouchOrMouseUp);
         window.addEventListener('mousedown', handleMouseDown);
         window.addEventListener('touchend', handleTouchOrMouseUp);
         window.addEventListener('touchstart', handleTouchDown);
 
-
         return () => {
+            window.removeEventListener('mousemove', handleMouseMove);
+            window.removeEventListener('touchmove', handleTouchMove);
             window.removeEventListener('mouseup', handleTouchOrMouseUp);
             window.removeEventListener('mousedown', handleMouseDown);
             window.removeEventListener('touchend', handleTouchOrMouseUp);
             window.removeEventListener('touchstart', handleTouchDown);            
-        };
-    }, []);    
+        }
+    });
 
-    return {mouseClickPosition: position, isMouseClicked}    
+    return {
+        currentPositions: currentPositions,
+        clickPosition: clickPositions,
+        onClick: isMouseClicked
+    };
 }

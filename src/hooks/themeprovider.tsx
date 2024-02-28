@@ -2,8 +2,10 @@ import * as React from "react";
 import { Themes } from "../interfaces/enums";
 import { createTheme } from '@mui/material/styles';
 
-// Custom hook to provide the theme for the react application and get the default value for the 
-// ThemeProvider. This would be utilized by components
+/**
+ * Custom hook to provide the theme for the react application and get the default value for the 
+ * ThemeProvider. This would be utilized by components
+ */
 function useThemeProvider() {
     const [theme, setTheme] = React.useState<Themes>(Themes.DARK);
 

@@ -1,24 +1,19 @@
 import * as React from 'react';
 import Paper from '@mui/material/Paper';
-import Stack from '@mui/material/Stack';
 import { styled } from '@mui/material/styles';
-import ThemeToggle from '../components/buttons/theme-toggle';
-import LanguageToggle from '../components/buttons/language-toggle';
 import { useNavigate, useSearchParams } from "react-router-dom";
-import useEventsProvider from '../hooks/useEventsProvider';
-import PlayerActionBar from '../components/toplevel/player-actions';
+import { Box } from '@mui/material';
 import CanvasBase, { ICanvasRefs } from "../components/canvas/canvas-base";
-import useEventsPlayer from '../hooks/playerRenderer';
+import useTimer from '../hooks/timer';
+import PageActions from '../components/button-groups/page-actions';
+import useEventsProvider from '../hooks/eventsProvider';
+import PlayerActionBar from "../components/button-groups/player-actions";
 
-const ButtonContainer = styled(Paper)(({ theme }) => ({
+const PageActionsBtnContainer = styled(Box)(({ theme }) => ({
     ...theme.typography.body2,
     position: "absolute",
     top: theme.spacing(1),
-    right: theme.spacing(3),
-    paddingTop: theme.spacing(1),
-    paddingBottom: theme.spacing(1),
-    paddingLeft: theme.spacing(1),
-    paddingRight: theme.spacing(1),    
+    right: theme.spacing(3), 
 }));
 
 const Container = styled(Paper)(({ theme }) => ({
@@ -32,36 +27,24 @@ const Container = styled(Paper)(({ theme }) => ({
 
 
 const PlayerPage: React.FC<{}> = () => {
-    const canvasBaseRefs = React.useRef<ICanvasRefs>(null);
     const navigate = useNavigate();
-    const [eventLoop, setEventLoopInterval] = React.useState<any>(null);
+    const searchParams = useSearchParams();
+    const canvasBaseRefs = React.useRef<ICanvasRefs>(null);
     const [currEventIndex, setEventIndex] = React.useState<number>(0);
     const [isPlaying, setIsPlaying] = React.useState<boolean>(false);
-    const events = useEventsProvider();
-
+    const events = useEventsProvider(searchParams[0].get("url") as string);
 
     const renderNextEvent = () => {
         setEventIndex((prevEventIndex) => {
             if (canvasBaseRefs.current === null) return prevEventIndex;
-            if (prevEventIndex === events.length) {
-                pauseEvents();
-                return prevEventIndex;
-            }
             canvasBaseRefs.current.renderEventOnCanvas(events[prevEventIndex]);
             return prevEventIndex + 1;   
         });        
     }
 
-    useEventsPlayer(events, currEventIndex, isPlaying, renderNextEvent)
+    const shouldContinue = () => { return currEventIndex < events.length && isPlaying; }
 
-
-    const playEvents = () => {
-        setIsPlaying(true)
-    }
-
-    const pauseEvents = () => {
-        setIsPlaying(false);
-    }
+    useTimer(currEventIndex, isPlaying, shouldContinue, renderNextEvent, () => {setIsPlaying(false)});
 
     const restartPlayer = () => {
         if (canvasBaseRefs.current === null) return;
@@ -69,34 +52,36 @@ const PlayerPage: React.FC<{}> = () => {
         setEventIndex(0);        
     }
 
+    const playEvents = () => {
+        if (currEventIndex >= events.length) return;
+        setIsPlaying(true);
+    }
+
     return (
         <>
-        <Container elevation={0}>
-            <CanvasBase        
-                ref={canvasBaseRefs}
-                canvasProps={{
-                    style: {
-                        display: "block"
-                    }
-                }}        
-            />
-            <PlayerActionBar 
-                isPlaying={isPlaying}
-                onPausePressed={pauseEvents}
-                onPlayPressed={playEvents} 
-                onRestartPressed={restartPlayer}
-                onReturnToMainPage={() => {navigate("/home/")}}
+            <Container elevation={0}>
+                <CanvasBase        
+                    ref={canvasBaseRefs}
+                    canvasProps={{
+                        style: {
+                            display: "block"
+                        }
+                    }}        
                 />
-            <ButtonContainer square={false} elevation={1}>
-                <Stack direction="row"
-                        justifyContent="center"
-                        alignItems="center"
-                        spacing={2} >
-                    <ThemeToggle />
-                    <LanguageToggle />
-                </Stack>
-            </ButtonContainer>        
-        </Container>
+                <PlayerActionBar 
+                    isPlaying={isPlaying}
+                    isPlayBtnDisabled={currEventIndex === events.length}
+                    onPlayBtnClick={playEvents}
+                    onPauseBtnClick={() => setIsPlaying(false)} 
+                    onRestartBtnClick={restartPlayer}
+                    onReturnToMainPageBtnClick={() => {navigate("/home/")}}
+                    />
+
+                <PageActionsBtnContainer>
+                    <PageActions showEventsDownloadBtn={false}
+                            showEventsUploadBtn={false} />
+                </PageActionsBtnContainer>        
+            </Container>
         </>
     );
 }

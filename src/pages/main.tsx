@@ -1,16 +1,16 @@
 import * as React from "react";
 import EventsMenu from '../components/toplevel/events-menu';
-import CanvasActionBar from '../components/toplevel/action-bar';
-import AdditionalPropertiesSelector from "../components/toplevel/properties-bar";
-import Canvas from '../components/toplevel/canvas';
+import DrawActions from "../components/button-groups/draw-actions";
+import DrawCustomizations from "../components/button-groups/draw-customizations";
+import CanvasInteractive from "../components/canvas/canvas-interactive";
 
 const CanvasPage: React.FC<{}> = () => {
     return (
         <>
-            <Canvas />
-            <CanvasActionBar />
+            <CanvasInteractive />
+            <DrawActions />
             <EventsMenu />
-            <AdditionalPropertiesSelector />
+            <DrawCustomizations />
         </>
     );
 };

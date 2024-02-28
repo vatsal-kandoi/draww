@@ -8,7 +8,7 @@ import Collapse from '@mui/material/Collapse';
 import { useLanguageStore } from "../../hooks/languageprovider";
 import List from '@mui/material/List';
 import { EventComponent, LastEventComponent } from "./event";
-import { Event } from "../../structures/event";
+import { EventBase } from "./structures/event";
 import { useNavigate } from "react-router-dom";
 
 
@@ -23,7 +23,7 @@ const ButtonStack = styled(Paper)(({ theme }) => ({
 
 
 interface IEvents {
-    events: Event[],
+    events: EventBase[],
     registerEventDeletion: any,
     clearAllEvents: any,
     userCount: number,
