@@ -3,13 +3,13 @@ import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import { styled } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
-import { useLanguageStore } from "../../hooks/languageprovider";
 import ModeIcon from '@mui/icons-material/Mode';
-import CropSquareIcon from '@mui/icons-material/CropSquare';
 import { connect } from "react-redux";
+import { useLanguageStore } from "../../hooks/languageprovider";
 import {CanvasActionSelectionType, CanvasActionType} from "../../interfaces/enums";
+import { Tooltip } from "@mui/material";
 
-const ButtonStack = styled(Paper)(({ theme }) => ({
+const DrawActionsBtnContainer = styled(Paper)(({ theme }) => ({
     ...theme.typography.body2,
     position: "absolute",
     top: theme.spacing(1),
@@ -22,8 +22,9 @@ const ButtonStack = styled(Paper)(({ theme }) => ({
 }));
 
 
-const CanvasActionBar: React.FC<{selectedCanvasAction: CanvasActionType, onSelectionChange: any}> = (props) => {
+const DrawActions: React.FC<{selectedCanvasAction: CanvasActionType, onSelectionChange: any}> = (props) => {
     const i18n = useLanguageStore();
+
     const onClick = (canvasAction: CanvasActionType, isSelected: Boolean) => {
         if (isSelected) {
             props.onSelectionChange(CanvasActionSelectionType.DESELECT, CanvasActionType.NONE)
@@ -33,25 +34,25 @@ const CanvasActionBar: React.FC<{selectedCanvasAction: CanvasActionType, onSelec
     }
 
     return (
-        <ButtonStack square={false} elevation={1}>
+        <DrawActionsBtnContainer square={false} 
+                elevation={1}>
             <Stack direction="row"
                     justifyContent="center"
                     alignItems="center"
-                    spacing={1} >
-                <IconButton id="pen"
-                        color={(props.selectedCanvasAction === CanvasActionType.PEN) ? "primary" : "default"}
-                        onClick={() => onClick(CanvasActionType.PEN, props.selectedCanvasAction === CanvasActionType.PEN)}
-                        aria-label={i18n.t("aria_buttons_pen")}>
-                    <ModeIcon />
-                </IconButton>
-                {/* <IconButton id="square"
-                        color={(props.selectedCanvasAction === CanvasActionType.SQUARE) ? "primary" : "default"}
-                        onClick={() => onClick(CanvasActionType.SQUARE, props.selectedCanvasAction === CanvasActionType.SQUARE)}
-                        aria-label={i18n.t("aria_buttons_square")}>
-                    <CropSquareIcon />                    
-                </IconButton> */}
+                    spacing={1} 
+                    component={"div"}
+                    role="group"
+                    aria-label={i18n.t("aria_buttons_groups_drawactions")} >
+                <Tooltip title={i18n.t("aria_buttons_pen")}>
+                    <IconButton id="pen"
+                            color={(props.selectedCanvasAction === CanvasActionType.PEN) ? "primary" : "default"}
+                            onClick={() => onClick(CanvasActionType.PEN, props.selectedCanvasAction === CanvasActionType.PEN)}
+                            aria-label={i18n.t("aria_buttons_pen")}>
+                        <ModeIcon />
+                    </IconButton>
+                </Tooltip>
             </Stack>
-        </ButtonStack>
+        </DrawActionsBtnContainer>
     );
 }
 
@@ -66,4 +67,4 @@ const mapDispatchToProps = (dispatch: any) => ({
     }),
 });
   
-export default connect(mapStateToProps, mapDispatchToProps)(CanvasActionBar);
+export default connect(mapStateToProps, mapDispatchToProps)(DrawActions);
