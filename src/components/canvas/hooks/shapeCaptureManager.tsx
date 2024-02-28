@@ -10,12 +10,15 @@ const useShapeCaptureManager = (): ShapeCaptureManager | null => {
     const [manager, setManager] = React.useState<ShapeCaptureManager | null>(null);
 
     React.useEffect(() => {
-        if (actionType === CanvasActionType.NONE) return;
-        
-        setManager(new ShapeCaptureManager(
-            actionType,
-            attributes
-        ));
+        if (actionType === CanvasActionType.NONE) {
+            setManager(null);
+        } else {
+            setManager(new ShapeCaptureManager(
+                actionType,
+                attributes
+            ));
+    
+        }
     }, [actionType, attributes]);
     
     return manager;
