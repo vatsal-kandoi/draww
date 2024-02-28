@@ -17,7 +17,7 @@ const App: React.FC<{}> = () => {
   const languageContextValue = useLanguageProvider();
 
   return (
-    <BrowserRouter basename="/">
+    <BrowserRouter basename="/draww">
       <Provider store={store}>
         <ThemeProviderContext.Provider value={themeContextValue}>
           <LanguageProviderContext.Provider value={languageContextValue}>        
