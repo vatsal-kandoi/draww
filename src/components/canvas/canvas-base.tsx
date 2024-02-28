@@ -1,8 +1,10 @@
-import React, { RefObject } from "react";
-import { useLanguageStore } from "../../hooks/languageprovider";
+import * as React from "react";
 import { styled } from '@mui/material/styles';
 import { Paper } from "@mui/material";
-import { Event } from "../../structures/event";
+import { CommonProps } from "@mui/material/OverridableComponent";
+import { useLanguageStore } from "../../hooks/languageprovider";
+import { EventBase } from "../events/structures/event";
+import { ShapeBase } from "./shapes/shape";
 
 const CanvasContainer = styled(Paper)(({ theme }) => ({
     ...theme.typography.body2,
@@ -14,14 +16,22 @@ const CanvasContainer = styled(Paper)(({ theme }) => ({
 }));
 
 interface ICanvasProps {
-    containerProps?: any;
-    canvasProps?: any;
+    /** Props to be passed into the container for the canvas */
+    containerProps?: CommonProps;
+    /** Props to be passed in for the canvas */
+    canvasProps?: CommonProps;
 }
 
 export interface ICanvasRefs {
+    /** Ref to be assigned to the container holding the canvas */
     canvasContainerRef: HTMLDivElement | null;
+    /** Ref to be assigned to the canvas */
     canvasRef: HTMLCanvasElement | null;
-    renderEventOnCanvas(event: Event): void;
+    /** Render the given event on the canvas */
+    renderEventOnCanvas(event: EventBase): void;
+    /** Render the shape on the canvas */
+    renderShapeOnCanvas(shape: ShapeBase): void;
+    /** Clear the canvas of all elements */
     clearCanvas(): void;
 }
 
@@ -33,7 +43,14 @@ const CanvasBase = React.forwardRef<ICanvasRefs, ICanvasProps>((props, refs) => 
     React.useImperativeHandle(refs, () => ({
         canvasContainerRef: canvasContainerRef.current,
         canvasRef: canvasRef.current,
-        renderEventOnCanvas: (event: Event) => {
+        renderShapeOnCanvas: (shape: ShapeBase) => {
+            if (canvasContainerRef.current === null) return ;
+            if (canvasRef.current === null) return;
+            const contextAPI = canvasRef.current.getContext("2d");
+            if (contextAPI === null) return;
+            shape.render(contextAPI);
+        },
+        renderEventOnCanvas: (event: EventBase) => {
             if (canvasContainerRef.current === null) return ;
             if (canvasRef.current === null) return;
             const contextAPI = canvasRef.current.getContext("2d");
@@ -62,7 +79,7 @@ const CanvasBase = React.forwardRef<ICanvasRefs, ICanvasProps>((props, refs) => 
         canvasRef.current.width  = canvasRef.current.offsetWidth;
         canvasRef.current.height = canvasRef.current.offsetHeight;
     }, []);    
-    
+
     return (
         <CanvasContainer ref={canvasContainerRef} 
                 elevation={0}

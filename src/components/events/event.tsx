@@ -8,20 +8,28 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { I18n } from "i18n-js";
 import DeleteIcon from '@mui/icons-material/Delete';
-import { Event } from "../../structures/event";
+import { EventBase } from "./structures/event";
+import { Tooltip } from "@mui/material";
 
-
-const LastEventComponent: React.FC<{count: number, i18n: I18n, handleEventCollapsibleEvent: any, isOpen: boolean, event: Event | null}> = (props) => {
+const LastEventComponent: React.FC<{
+    eventCount: number;
+    i18n: I18n;
+    onCollapsibleBtnClick: () => void;
+    isCollapsibleOpen: boolean, 
+    event: EventBase | null
+}> = (props) => {
     return (
         <ListItem alignItems="flex-start"
                 secondaryAction={
-                    <Badge badgeContent={props.count} 
+                    <Badge badgeContent={props.eventCount} 
                             color="secondary">
-                        <IconButton edge="end" 
-                                aria-label={props.i18n.t((props.isOpen === true) ? "aria_messages_events_hide" : "aria_messages_events_show" )}
-                                onClick={props.handleEventCollapsibleEvent}>
-                            {(props.isOpen !== true) ? <KeyboardArrowDownIcon /> : <KeyboardArrowUpIcon /> }
-                        </IconButton>
+                        <Tooltip title={props.i18n.t((props.isCollapsibleOpen === true) ? "aria_buttons_events_hide" : "aria_buttons_events_show" )}>
+                            <IconButton edge="end" 
+                                    aria-label={props.i18n.t((props.isCollapsibleOpen === true) ? "aria_buttons_events_hide" : "aria_buttons_events_show" )}
+                                    onClick={props.onCollapsibleBtnClick}>
+                                {(props.isCollapsibleOpen !== true) ? <KeyboardArrowDownIcon /> : <KeyboardArrowUpIcon /> }
+                            </IconButton>
+                        </Tooltip>
                     </Badge>
                 }>
             {(props.event !== null) ? (
@@ -38,21 +46,37 @@ const LastEventComponent: React.FC<{count: number, i18n: I18n, handleEventCollap
                             </>
                         } />
             ) : (
-                <ListItemText primary={"No events created"} />
+                <ListItemText primary={props.i18n.t("messages_noevents")} />
             )}
         </ListItem>
     );
 }
 
-const EventComponent: React.FC<{i18n: I18n, event: Event, onDeleteEvent?: any, showDeleteOption: boolean}> = (props) => {    
+const EventComponent: React.FC<{
+    i18n: I18n, 
+    event: EventBase, 
+    onEventDeleteBtnClick?: (event: EventBase) => void, 
+    showEventDeleteBtn: boolean
+}> = (props) => {        
+    const {event, i18n, onEventDeleteBtnClick, showEventDeleteBtn} = props;
+
+    const onClick = React.useCallback(() => {
+        if (showEventDeleteBtn && onEventDeleteBtnClick !== undefined) {
+            onEventDeleteBtnClick(event);
+        }
+    }, [event, onEventDeleteBtnClick, showEventDeleteBtn]);
+
     return (
         <ListItem alignItems="flex-start"
                 secondaryAction={
                     <>
-                        {(props.showDeleteOption ) ? (
-                            <IconButton onClick={() => props.onDeleteEvent(props.event)} aria-label={props.i18n.t("aria_messages_event_delete")}>
-                                <DeleteIcon/>
-                            </IconButton>
+                        {(showEventDeleteBtn ) ? (
+                            <Tooltip title={i18n.t("aria_buttons_events_delete")}>
+                                <IconButton onClick={onClick} 
+                                        aria-label={i18n.t("aria_buttons_events_delete")}>
+                                    <DeleteIcon/>
+                                </IconButton>
+                            </Tooltip>
                         ) : null }
                     </>
                 }>

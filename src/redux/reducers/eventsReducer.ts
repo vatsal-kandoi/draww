@@ -1,33 +1,33 @@
 import { CanvasEventType } from "../../interfaces/enums";
-import { Event } from "../../structures/event";
+import { EventBase } from "../../components/events/structures/event";
 
 
 interface ICanvasEvents {
-    users: Set<string>,
-    events: Event[],
-    deletedEvents: Event[],
+    users: string[],
+    events: EventBase[],
+    deletedEvents: EventBase[],
 }
 
 const initialState: ICanvasEvents = {
-    users: new Set(),
+    users: [],
     events: [],
     deletedEvents: [],
 };
   
 const canvasEventsReducer = (
         state: ICanvasEvents = initialState, 
-        action: {type: CanvasEventType, payload: Event}
+        action: {type: CanvasEventType, payload: EventBase}
     ) => {
-    let users: Set<string>;       
+    let users: string[];       
     switch (action.type) {
         case CanvasEventType.LOAD:
-            const events = ( action.payload as any ) as Event[];
-            users = new Set(events.map((ev) => ev.user_name));
+            const events = ( action.payload as any ) as EventBase[];
+            users = events.map((ev) => ev.user_name);
             return { ...state, events: action.payload, users: users }
         case CanvasEventType.ADD:
-            users = state.users;
-            users.add(action.payload.user_name)
-            return { ...state, events: [...state.events, action.payload], users }
+            users = [...state.users];
+            users.push(action.payload.user_name)
+            return { ...state, events: [...state.events, action.payload], users: users }
         case CanvasEventType.DELETE: 
             return { ...state, events: state.events.filter(event => event.event_name !== action.payload.event_name), deletedEvents: [action.payload] }
         case CanvasEventType.DELETE_CONFIRMED: 
