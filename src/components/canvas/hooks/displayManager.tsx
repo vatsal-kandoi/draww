@@ -15,6 +15,7 @@ import ShapeCaptureManager from "../managers/capture";
  */
 const useDisplayManager = (
     canvasRefs: ICanvasRefs | null,
+    isMouseOnCanvas: boolean,
     manager: ShapeCaptureManager | null
 ): EventBase | undefined => {
     const events: EventBase[] = useSelector(state => (state as any)?.events?.events);
@@ -49,17 +50,17 @@ const useDisplayManager = (
         if (manager === null) return;
 
         if (onClick) {
-            if (shouldNotContinueToCaptureShape()){
+            if (!isMouseOnCanvas) return;
+            if (prevOrInitialPosition === DEFAULT_NULL_POINT){
                 setPrevPosition(clickPosition);
                 return;
             };
             setPrevPosition(currentPositions);
-            const shape = manager.captureShape(prevOrInitialPosition, currentPositions);
-            canvasRefs?.renderShapeOnCanvas(shape);
-            
+            manager.renderShapeOnCanvas(clickPosition, prevOrInitialPosition, currentPositions, canvasRefs)            
         } else {
+            // THe mouse has lifted from the canvas
             setPrevPosition(DEFAULT_NULL_POINT);
-            const evt = manager.createEvent(user);
+            const evt = manager.createEvent(user, canvasRefs);
             manager.reset();
             if (evt === null) return;
             setEvent(evt);

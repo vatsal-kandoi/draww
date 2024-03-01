@@ -1,7 +1,8 @@
 import { CanvasActionType } from "../../../interfaces/enums";
-import { Line, createShapeFromJSON } from "../../canvas/shapes/shape";
+import { Line, Square, createShapeFromJSON } from "../../canvas/shapes/shape";
 import { EventBase } from "./base";
 import { PenEvent } from "./pen";
+import { SquareEvent } from "./square";
 
 /**
  * Create the event form the JSON object uploaded by the user
@@ -24,6 +25,11 @@ const createEvent = (type: CanvasActionType, user_name: string, shape: any): Eve
         return new PenEvent(
             user_name,
             shape as Line[],
+        )
+    if (type === CanvasActionType.SQUARE) 
+        return new SquareEvent(
+            user_name,
+            shape as Square,
         )
 
     throw new Error("Unsupported action type present in the JSON")

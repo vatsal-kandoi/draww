@@ -2,6 +2,7 @@ import { Shape } from "../../../interfaces/enums";
 import { IPoint } from "../../../interfaces/shapes";
 import { Line } from "./line";
 import { ShapeBase } from "./base";
+import { Square } from "./square";
 
 /**
  * Conver the JSON into a shape object based on the 
@@ -22,5 +23,6 @@ const createShapeFromJSON = (shapeJson: any): ShapeBase => {
 export { 
     createShapeFromJSON, 
     ShapeBase, 
-    Line 
+    Line,
+    Square 
 }; 

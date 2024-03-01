@@ -11,9 +11,10 @@ interface ICanvasProps {
 }
 
 const InteractiveCanvas: React.FC<ICanvasProps> = (props) => {
+    const [isMouseOnCanvas, setIsMouseOnCanvas] = React.useState<boolean>(false);
     const canvasBaseRefs = React.useRef<ICanvasRefs>(null);
     const manager = useShapeCaptureManager();
-    const event = useDisplayManager(canvasBaseRefs.current, manager);
+    const event = useDisplayManager(canvasBaseRefs.current, isMouseOnCanvas, manager);
 
     // Destructured props outside of use-effect to not re-run use effect on any props re-render
     const createNewEvent = props.onNewEvent;
@@ -26,12 +27,12 @@ const InteractiveCanvas: React.FC<ICanvasProps> = (props) => {
     return (
         <CanvasBase        
             ref={canvasBaseRefs}
-            canvasProps={{
-                style: {
-                    cursor: "pointer", 
-                    display: "block"
+            containerProps={
+                {
+                    onMouseEnter: () => {setIsMouseOnCanvas(true)},
+                    onMouseLeave: () => {setIsMouseOnCanvas(false)}    
                 }
-            }}        
+            }
         />
     );
 }

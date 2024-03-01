@@ -8,6 +8,7 @@ import { connect } from "react-redux";
 import { useLanguageStore } from "../../hooks/languageprovider";
 import {CanvasActionSelectionType, CanvasActionType} from "../../interfaces/enums";
 import { Tooltip } from "@mui/material";
+import { CropSquareSharp } from "@mui/icons-material";
 
 const DrawActionsBtnContainer = styled(Paper)(({ theme }) => ({
     ...theme.typography.body2,
@@ -49,6 +50,14 @@ const DrawActions: React.FC<{selectedCanvasAction: CanvasActionType, onSelection
                             onClick={() => onClick(CanvasActionType.PEN, props.selectedCanvasAction === CanvasActionType.PEN)}
                             aria-label={i18n.t("aria_buttons_pen")}>
                         <ModeIcon />
+                    </IconButton>
+                </Tooltip>
+                <Tooltip title={i18n.t("aria_buttons_square")}>
+                    <IconButton id="square"
+                            color={(props.selectedCanvasAction === CanvasActionType.SQUARE) ? "primary" : "default"}
+                            onClick={() => onClick(CanvasActionType.SQUARE, props.selectedCanvasAction === CanvasActionType.SQUARE)}
+                            aria-label={i18n.t("aria_buttons_square")}>
+                        <CropSquareSharp />
                     </IconButton>
                 </Tooltip>
             </Stack>

@@ -62,11 +62,6 @@ const PlayerPage: React.FC<{}> = () => {
             <Container elevation={0}>
                 <CanvasBase        
                     ref={canvasBaseRefs}
-                    canvasProps={{
-                        style: {
-                            display: "block"
-                        }
-                    }}        
                 />
                 <PlayerActionBar 
                     isPlaying={isPlaying}

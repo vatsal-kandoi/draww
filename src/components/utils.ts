@@ -1,3 +1,4 @@
+import { RefObject } from "react";
 import { Languages } from "../interfaces/enums";
 import { EventBase } from "./events/structures/base";
 import { exportEventsToJSON, loadEventsFromJSON } from "./events/structures/event";
@@ -53,4 +54,31 @@ export function getLanguageCode(language: string) {
         return Languages.ESP;
     }
     return Languages.EN;
+}
+
+export function setCanvasSizesToMax(canvasRef: RefObject<HTMLCanvasElement>) {
+    if (canvasRef.current === null) return;
+
+    canvasRef.current.style.width ='100%';
+    canvasRef.current.style.height='100%';
+    canvasRef.current.style.margin = "0px";
+    canvasRef.current.style.padding = "0px";
+
+    canvasRef.current.width  = canvasRef.current.offsetWidth;
+    canvasRef.current.height = canvasRef.current.offsetHeight;
+}
+
+export function abs(num: number): number {
+    if (num < 0) return num * -1;
+    return num;
+}
+
+export function max(num1: number, num2: number): number {
+    if (num1 > num2) return num1;
+    return num2;
+}
+
+export function min(num1: number, num2: number): number {
+    if (num1 < num2) return num1;
+    return num2;
 }

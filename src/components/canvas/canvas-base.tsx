@@ -5,6 +5,8 @@ import { CommonProps } from "@mui/material/OverridableComponent";
 import { useLanguageStore } from "../../hooks/languageprovider";
 import { EventBase } from "../events/structures/event";
 import { ShapeBase } from "./shapes/shape";
+import { AnyARecord } from "dns";
+import { setCanvasSizesToMax } from "../utils";
 
 const CanvasContainer = styled(Paper)(({ theme }) => ({
     ...theme.typography.body2,
@@ -15,11 +17,10 @@ const CanvasContainer = styled(Paper)(({ theme }) => ({
     height: "100%"
 }));
 
+
 interface ICanvasProps {
     /** Props to be passed into the container for the canvas */
-    containerProps?: CommonProps;
-    /** Props to be passed in for the canvas */
-    canvasProps?: CommonProps;
+    containerProps?: any ;
 }
 
 export interface ICanvasRefs {
@@ -33,12 +34,15 @@ export interface ICanvasRefs {
     renderShapeOnCanvas(shape: ShapeBase): void;
     /** Clear the canvas of all elements */
     clearCanvas(): void;
+    renderShapeOnLayer(shape: ShapeBase): void;
+    clearLayer(): void;
 }
 
 const CanvasBase = React.forwardRef<ICanvasRefs, ICanvasProps>((props, refs) => {
     const i18n = useLanguageStore();
     const canvasContainerRef = React.useRef<HTMLDivElement>(null);
     const canvasRef = React.useRef<HTMLCanvasElement>(null)
+    const temporaryCanvasRef = React.useRef<HTMLCanvasElement>(null);
 
     React.useImperativeHandle(refs, () => ({
         canvasContainerRef: canvasContainerRef.current,
@@ -50,6 +54,15 @@ const CanvasBase = React.forwardRef<ICanvasRefs, ICanvasProps>((props, refs) => 
             if (contextAPI === null) return;
             shape.render(contextAPI);
         },
+        // We will assume any rendering on the temporary canvas will be done in its entirety, and clear up the previous canvas
+        renderShapeOnLayer: (shape: ShapeBase) => {
+            if (temporaryCanvasRef.current === null) return;
+            const contextAPI = temporaryCanvasRef.current.getContext("2d");
+            if (contextAPI === null) return;
+
+            contextAPI.clearRect(0, 0, temporaryCanvasRef.current.width, temporaryCanvasRef.current.height);
+            shape.render(contextAPI);
+        },
         renderEventOnCanvas: (event: EventBase) => {
             if (canvasContainerRef.current === null) return ;
             if (canvasRef.current === null) return;
@@ -57,6 +70,13 @@ const CanvasBase = React.forwardRef<ICanvasRefs, ICanvasProps>((props, refs) => 
             if (contextAPI === null) return;
 
             event.render(contextAPI);            
+        },
+        clearLayer: () => {
+            if (temporaryCanvasRef.current === null) return;
+            const contextAPI = temporaryCanvasRef.current.getContext("2d");
+            if (contextAPI === null) return;
+
+            contextAPI.clearRect(0, 0, temporaryCanvasRef.current.width, temporaryCanvasRef.current.height);
         },
         clearCanvas: () => {
             if (canvasRef.current === null) return;
@@ -66,18 +86,10 @@ const CanvasBase = React.forwardRef<ICanvasRefs, ICanvasProps>((props, refs) => 
             contextAPI.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
         }
     }));
-    
+
     React.useEffect(() => {
-        if (canvasRef.current === null) return;
-
-        canvasRef.current.style.width ='100%';
-        canvasRef.current.style.height='100%';
-        canvasRef.current.style.backgroundColor = "inherit";        
-        canvasRef.current.style.margin = "0px";
-        canvasRef.current.style.padding = "0px";
-
-        canvasRef.current.width  = canvasRef.current.offsetWidth;
-        canvasRef.current.height = canvasRef.current.offsetHeight;
+        setCanvasSizesToMax(canvasRef);
+        setCanvasSizesToMax(temporaryCanvasRef);
     }, []);    
 
     return (
@@ -85,7 +97,25 @@ const CanvasBase = React.forwardRef<ICanvasRefs, ICanvasProps>((props, refs) => 
                 elevation={0}
                 {...props.containerProps}>
             <canvas ref={canvasRef}
-                    {...props.canvasProps}>
+                    style={{
+                        position: "absolute", 
+                        top: 0, 
+                        left: 0,
+                        cursor: "pointer", 
+                        display: "block",
+                        zIndex: 0,
+                    }} >
+            </canvas>
+            <canvas ref={temporaryCanvasRef}
+                    style={{
+                        position: "absolute", 
+                        top: 0, 
+                        left: 0,
+                        cursor: "pointer", 
+                        display: "block",
+                        zIndex: 0,
+                        backgroundColor: "transparent"
+                    }} >
                 {i18n.t("messages_unsupportedbrowser")}      
             </canvas>
         </CanvasContainer>
