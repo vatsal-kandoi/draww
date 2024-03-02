@@ -1,4 +1,5 @@
 import { CanvasActionType } from "../../../interfaces/enums";
+import { IPoint } from "../../../interfaces/shapes";
 
 class EventBase {
     public event_name: string;
@@ -44,7 +45,7 @@ class EventBase {
      * Render the event onto the canvas
      * @param contextAPI Convext API for the canvas 
      */
-    public render(contextAPI: CanvasRenderingContext2D) {
+    public render(contextAPI: CanvasRenderingContext2D, currentDimensions: IPoint) {
         throw new Error("Not implemented");
     }
 

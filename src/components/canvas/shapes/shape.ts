@@ -15,8 +15,17 @@ const createShapeFromJSON = (shapeJson: any): ShapeBase => {
             shapeJson.fromCoords as IPoint, 
             shapeJson.toCoords as IPoint,
             shapeJson.color as string,
+            shapeJson.dimensions as IPoint,
         )
     }
+    if (shapeJson.type === Shape.SQUARE) {
+        return new Square(
+            shapeJson.fromCoords as IPoint, 
+            shapeJson.toCoords as IPoint,
+            shapeJson.color as string,
+            shapeJson.dimensions as IPoint,
+        )
+    }   
     throw new Error("Unrecognized type passed in for a shape type")
 }
 

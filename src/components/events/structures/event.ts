@@ -16,6 +16,12 @@ const createEventFromJSON = (eventJson: any): EventBase => {
             eventJson.user_name as string,
             eventJson.shape.map((shapeJson: any) => createShapeFromJSON(shapeJson)),
         );
+    if (eventJson.type === CanvasActionType.SQUARE) 
+        return createEvent(
+            CanvasActionType.SQUARE, 
+            eventJson.user_name as string,
+            createShapeFromJSON(eventJson.shape)
+        );
 
     throw new Error("Unsupported action type present in the JSON")
 }

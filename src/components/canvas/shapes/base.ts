@@ -1,10 +1,18 @@
+import { IPoint } from "../../../interfaces/shapes";
+
 class ShapeBase {
+
+    protected captureDimensions: IPoint
+
+    constructor(captureDimensions: IPoint) {
+        this.captureDimensions = captureDimensions;
+    }
 
     /**
      * Render the shape onto the canvas
      * @param contextAPI Context API for canvas
      */
-    public render(contextAPI: CanvasRenderingContext2D) {
+    public render(contextAPI: CanvasRenderingContext2D, currentDimensions: IPoint) {
         throw new Error("Not implemented by the class");
     }
 

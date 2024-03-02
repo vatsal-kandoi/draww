@@ -1,5 +1,6 @@
 import { CanvasActionType } from "../../../interfaces/enums";
-import { Line, Square } from "../../canvas/shapes/shape";
+import { IPoint } from "../../../interfaces/shapes";
+import { Square } from "../../canvas/shapes/shape";
 import { EventBase } from "./base";
 
 class SquareEvent extends EventBase {
@@ -18,8 +19,8 @@ class SquareEvent extends EventBase {
         }
     }
 
-    public render(contextAPI: CanvasRenderingContext2D) {
-        this.shape.render(contextAPI);
+    public render(contextAPI: CanvasRenderingContext2D, currentDimensions: IPoint) {
+        this.shape.render(contextAPI, currentDimensions);
     }
 }
 

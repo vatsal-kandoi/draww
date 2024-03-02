@@ -1,12 +1,10 @@
 import * as React from "react";
 import { styled } from '@mui/material/styles';
 import { Paper } from "@mui/material";
-import { CommonProps } from "@mui/material/OverridableComponent";
 import { useLanguageStore } from "../../hooks/languageprovider";
 import { EventBase } from "../events/structures/event";
 import { ShapeBase } from "./shapes/shape";
-import { AnyARecord } from "dns";
-import { setCanvasSizesToMax } from "../utils";
+import { getCanvasDimensions, setCanvasSizesToMax } from "../utils";
 
 const CanvasContainer = styled(Paper)(({ theme }) => ({
     ...theme.typography.body2,
@@ -36,6 +34,7 @@ export interface ICanvasRefs {
     clearCanvas(): void;
     renderShapeOnLayer(shape: ShapeBase): void;
     clearLayer(): void;
+    captureDimentions(): {x: number, y: number};
 }
 
 const CanvasBase = React.forwardRef<ICanvasRefs, ICanvasProps>((props, refs) => {
@@ -52,7 +51,7 @@ const CanvasBase = React.forwardRef<ICanvasRefs, ICanvasProps>((props, refs) => 
             if (canvasRef.current === null) return;
             const contextAPI = canvasRef.current.getContext("2d");
             if (contextAPI === null) return;
-            shape.render(contextAPI);
+            shape.render(contextAPI, getCanvasDimensions(canvasRef.current));
         },
         // We will assume any rendering on the temporary canvas will be done in its entirety, and clear up the previous canvas
         renderShapeOnLayer: (shape: ShapeBase) => {
@@ -61,7 +60,7 @@ const CanvasBase = React.forwardRef<ICanvasRefs, ICanvasProps>((props, refs) => 
             if (contextAPI === null) return;
 
             contextAPI.clearRect(0, 0, temporaryCanvasRef.current.width, temporaryCanvasRef.current.height);
-            shape.render(contextAPI);
+            shape.render(contextAPI, getCanvasDimensions(temporaryCanvasRef.current));
         },
         renderEventOnCanvas: (event: EventBase) => {
             if (canvasContainerRef.current === null) return ;
@@ -69,7 +68,7 @@ const CanvasBase = React.forwardRef<ICanvasRefs, ICanvasProps>((props, refs) => 
             const contextAPI = canvasRef.current.getContext("2d");
             if (contextAPI === null) return;
 
-            event.render(contextAPI);            
+            event.render(contextAPI, getCanvasDimensions(canvasRef.current));            
         },
         clearLayer: () => {
             if (temporaryCanvasRef.current === null) return;
@@ -84,7 +83,11 @@ const CanvasBase = React.forwardRef<ICanvasRefs, ICanvasProps>((props, refs) => 
             if (contextAPI === null) return;
 
             contextAPI.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
-        }
+        },
+        captureDimentions() {
+            if (canvasRef.current === null) return { x: -1, y: -1 };
+            return getCanvasDimensions(canvasRef.current);
+        },
     }));
 
     React.useEffect(() => {

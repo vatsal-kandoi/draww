@@ -3,7 +3,7 @@ import { CanvasActionType } from "../../../interfaces/enums";
 import { IPoint } from "../../../interfaces/shapes";
 import { EventBase, createEvent } from "../../events/structures/event";
 import { ICanvasRefs } from "../canvas-base";
-import { Line, ShapeBase } from "../shapes/shape";
+import { Line } from "../shapes/shape";
 import { Square } from "../shapes/square";
 
 class ShapeCaptureManager {
@@ -14,23 +14,19 @@ class ShapeCaptureManager {
     constructor(actionType: CanvasActionType, attributes: IAttributeOptions) {
         this.actionType = actionType;
         this.attributes = attributes;
-    }
-
-    public captureLine(fromCoords: IPoint, toCoords: IPoint): Line {
-        return new Line(fromCoords, toCoords, this.attributes.color)
-    }
+    } 
 
     public renderLineOnCanvas(fromCoords: IPoint, toCoords: IPoint, canvasRefs: ICanvasRefs) {
         if (this.shape === null) {
             this.shape = [];
         }
-        const line = new Line(fromCoords, toCoords, this.attributes.color)
+        const line = new Line(fromCoords, toCoords, this.attributes.color, canvasRefs.captureDimentions())
         this.shape.push(line);
         canvasRefs.renderShapeOnCanvas(line);    
     }
 
     public renderSquareOnCanvas(fromCoords: IPoint, toCoords: IPoint, canvasRefs: ICanvasRefs) {
-        this.shape = new Square(fromCoords, toCoords, this.attributes.color)
+        this.shape = new Square(fromCoords, toCoords, this.attributes.color, canvasRefs.captureDimentions())
         canvasRefs.renderShapeOnLayer(this.shape);
     }
 

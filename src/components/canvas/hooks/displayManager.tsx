@@ -41,10 +41,6 @@ const useDisplayManager = (
         setRenderedEvents(events);
     }, [events, canvasRefs]);
 
-    const shouldNotContinueToCaptureShape = React.useCallback(() => {
-        return prevOrInitialPosition === DEFAULT_NULL_POINT && clickPosition !== DEFAULT_NULL_POINT;
-    }, [prevOrInitialPosition, clickPosition]);
-
     React.useEffect(() => {
         // When the user presses the mouse / touch
         if (manager === null) return;

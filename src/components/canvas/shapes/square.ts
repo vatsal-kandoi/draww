@@ -1,7 +1,7 @@
 import { ShapeBase } from "./base";
 import { IPoint } from "../../../interfaces/shapes";
 import { Shape } from "../../../interfaces/enums";
-import { abs, max } from "../../utils";
+import { normalizeCoordinates } from "../../utils";
 
 
 class Square extends ShapeBase {
@@ -9,22 +9,24 @@ class Square extends ShapeBase {
     private fromCoords: IPoint;
     private toCoords: IPoint;
     private color: string;
-    public type: Shape = Shape.LINE;
+    public type: Shape = Shape.SQUARE;
 
-    constructor(fromCoords: IPoint, toCoords: IPoint, color: string) {
-        super();
+    constructor(fromCoords: IPoint, toCoords: IPoint, color: string, captureDimensions: IPoint) {
+        super(captureDimensions);
         this.fromCoords = fromCoords;
         this.toCoords = toCoords;
         this.color = color;
     }
 
-    public render(contextAPI: CanvasRenderingContext2D) {
+    public render(contextAPI: CanvasRenderingContext2D, currentDimensions: IPoint) {
+        const fromCoords = normalizeCoordinates(this.fromCoords, currentDimensions, this.captureDimensions);
+        const toCoords = normalizeCoordinates(this.toCoords, currentDimensions, this.captureDimensions);
         contextAPI.strokeStyle = this.color;
         contextAPI.strokeRect(
-            this.fromCoords.x, 
-            this.fromCoords.y, 
-            (this.toCoords.x - this.fromCoords.x),
-            (this.toCoords.y - this.fromCoords.y)
+            fromCoords.x, 
+            fromCoords.y, 
+            (toCoords.x - fromCoords.x),
+            (toCoords.y - fromCoords.y)
         );                   
     }
 
@@ -33,7 +35,8 @@ class Square extends ShapeBase {
             type: this.type,
             color: this.color,
             fromCoords: this.fromCoords,
-            toCoords: this.toCoords
+            toCoords: this.toCoords,
+            dimensions: this.captureDimensions,
         }
     }
 }

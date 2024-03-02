@@ -1,6 +1,7 @@
 import { ShapeBase } from "./base";
 import { IPoint } from "../../../interfaces/shapes";
 import { Shape } from "../../../interfaces/enums";
+import { normalizeCoordinates } from "../../utils";
 
 
 class Line extends ShapeBase {
@@ -10,18 +11,21 @@ class Line extends ShapeBase {
     private color: string;
     public type: Shape = Shape.LINE;
 
-    constructor(fromCoords: IPoint, toCoords: IPoint, color: string) {
-        super();
+    constructor(fromCoords: IPoint, toCoords: IPoint, color: string, captureDimensions: IPoint) {
+        super(captureDimensions);
         this.fromCoords = fromCoords;
         this.toCoords = toCoords;
         this.color = color;
     }
 
-    public render(contextAPI: CanvasRenderingContext2D) {
+    public render(contextAPI: CanvasRenderingContext2D, currentDimensions: IPoint) {
+        const fromCoords = normalizeCoordinates(this.fromCoords, currentDimensions, this.captureDimensions);
+        const toCoords = normalizeCoordinates(this.toCoords, currentDimensions, this.captureDimensions);
+
         contextAPI.strokeStyle = this.color;
         contextAPI.beginPath();
-        contextAPI.moveTo(this.fromCoords.x, this.fromCoords.y);
-        contextAPI.lineTo(this.toCoords.x, this.toCoords.y);
+        contextAPI.moveTo(fromCoords.x, fromCoords.y);
+        contextAPI.lineTo(toCoords.x, toCoords.y);
         contextAPI.closePath();
         contextAPI.stroke();                   
     }
@@ -31,7 +35,8 @@ class Line extends ShapeBase {
             type: this.type,
             color: this.color,
             fromCoords: this.fromCoords,
-            toCoords: this.toCoords
+            toCoords: this.toCoords,
+            dimensions: this.captureDimensions,
         }
     }
 }
