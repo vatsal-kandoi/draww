@@ -1,5 +1,5 @@
 import { CanvasActionType } from "../../../interfaces/enums";
-import { IPoint } from "../../../interfaces/shapes";
+import { IPoint } from "../../../interfaces";
 import { Line } from "../../canvas/shapes/shape";
 import { EventBase } from "./base";
 

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { IPoint } from "../interfaces/shapes";
+import { IPoint } from "../interfaces";
 
 export const DEFAULT_NULL_POINT = { x: -1, y: -1 };
 

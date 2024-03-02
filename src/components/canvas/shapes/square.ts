@@ -1,5 +1,5 @@
 import { ShapeBase } from "./base";
-import { IPoint } from "../../../interfaces/shapes";
+import { IPoint } from "../../../interfaces";
 import { Shape } from "../../../interfaces/enums";
 import { normalizeCoordinates } from "../../utils";
 

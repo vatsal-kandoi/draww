@@ -2,7 +2,7 @@ import * as React from "react";
 import { EventBase } from "../../events/structures/base";
 import { ICanvasRefs } from "../canvas-base";
 import { DEFAULT_NULL_POINT, useMouseCurrentPositionProvider } from "../../../hooks/mousePositionProvider";
-import { IPoint } from "../../../interfaces/shapes";
+import { IPoint } from "../../../interfaces";
 import { useSelector } from "react-redux";
 import { areEventsEqual } from "../../utils";
 import ShapeCaptureManager from "../managers/capture";
