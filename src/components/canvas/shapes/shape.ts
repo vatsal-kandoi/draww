@@ -1,5 +1,5 @@
 import { Shape } from "../../../interfaces/enums";
-import { IPoint } from "../../../interfaces/shapes";
+import { IPoint } from "../../../interfaces";
 import { Line } from "./line";
 import { ShapeBase } from "./base";
 import { Square } from "./square";

@@ -1,4 +1,4 @@
-import { IPoint } from "../../../interfaces/shapes";
+import { IPoint } from "../../../interfaces";
 
 class ShapeBase {
 

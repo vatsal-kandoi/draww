@@ -1,5 +1,5 @@
 import { CanvasActionType } from "../../../interfaces/enums";
-import { IPoint } from "../../../interfaces/shapes";
+import { IPoint } from "../../../interfaces";
 
 class EventBase {
     public event_name: string;

@@ -1,6 +1,6 @@
 import { IAttributeOptions } from "../../../interfaces/attributeOptions";
 import { CanvasActionType } from "../../../interfaces/enums";
-import { IPoint } from "../../../interfaces/shapes";
+import { IPoint } from "../../../interfaces";
 import { EventBase, createEvent } from "../../events/structures/event";
 import { ICanvasRefs } from "../canvas-base";
 import { Line } from "../shapes/shape";
