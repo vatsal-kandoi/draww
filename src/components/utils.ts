@@ -2,7 +2,7 @@ import { RefObject } from "react";
 import { Languages } from "../interfaces/enums";
 import { EventBase } from "./events/structures/base";
 import { exportEventsToJSON, loadEventsFromJSON } from "./events/structures/event";
-import { IPoint } from "../interfaces/shapes";
+import { IPoint } from "../interfaces";
 
 export function areEventsEqual(eventList: EventBase[], otherEventList: EventBase[]): boolean {
     if (eventList.length !== otherEventList.length) return false;

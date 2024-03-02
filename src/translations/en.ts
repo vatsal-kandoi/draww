@@ -29,22 +29,8 @@ const messages: object = {
     "messages_unsupportedbrowser": "Your browser does not support the HTML canvas tag",
     "messages_noevents": "No events created",
     "messages_events": "Events",
-    "messages_name": "Please enter your name",
-
-    
+    "messages_name": "Please enter your name",    
     "aria_buttons_square": "Select square to draw",
-
-
-
-    "aria_messages_user_count": "Unique user count across events",
-    "aria_messages_event_count": "Event count",
-
-
-
-
-    "messages_introduction_enterName": "Hello, please enter your name",
-    "helperTexts.introduction.name": "Name",
-    "placeholders.introduction.name": "Name",
 };
 
 export default messages;

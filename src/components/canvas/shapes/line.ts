@@ -21,7 +21,7 @@ class Line extends ShapeBase {
     public render(contextAPI: CanvasRenderingContext2D, currentDimensions: IPoint) {
         const fromCoords = normalizeCoordinates(this.fromCoords, currentDimensions, this.captureDimensions);
         const toCoords = normalizeCoordinates(this.toCoords, currentDimensions, this.captureDimensions);
-
+        
         contextAPI.strokeStyle = this.color;
         contextAPI.beginPath();
         contextAPI.moveTo(fromCoords.x, fromCoords.y);

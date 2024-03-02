@@ -47,7 +47,6 @@ const CanvasBase = React.forwardRef<ICanvasRefs, ICanvasProps>((props, refs) => 
         canvasContainerRef: canvasContainerRef.current,
         canvasRef: canvasRef.current,
         renderShapeOnCanvas: (shape: ShapeBase) => {
-            if (canvasContainerRef.current === null) return ;
             if (canvasRef.current === null) return;
             const contextAPI = canvasRef.current.getContext("2d");
             if (contextAPI === null) return;
@@ -63,7 +62,6 @@ const CanvasBase = React.forwardRef<ICanvasRefs, ICanvasProps>((props, refs) => 
             shape.render(contextAPI, getCanvasDimensions(temporaryCanvasRef.current));
         },
         renderEventOnCanvas: (event: EventBase) => {
-            if (canvasContainerRef.current === null) return ;
             if (canvasRef.current === null) return;
             const contextAPI = canvasRef.current.getContext("2d");
             if (contextAPI === null) return;
