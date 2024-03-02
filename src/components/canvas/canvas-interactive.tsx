@@ -5,6 +5,7 @@ import { EventBase } from "../events/structures/event";
 import useDisplayManager from "./hooks/displayManager";
 import CanvasBase, { ICanvasRefs } from "./canvas-base";
 import useShapeCaptureManager from "./hooks/shapeCaptureManager";
+import useRenderManager from "./hooks/renderManager";
 
 interface ICanvasProps {
     onNewEvent: (event: EventBase) => void;
@@ -15,6 +16,8 @@ const InteractiveCanvas: React.FC<ICanvasProps> = (props) => {
     const canvasBaseRefs = React.useRef<ICanvasRefs>(null);
     const manager = useShapeCaptureManager();
     const event = useDisplayManager(canvasBaseRefs.current, isMouseOnCanvas, manager);
+
+    useRenderManager(canvasBaseRefs);
 
     // Destructured props outside of use-effect to not re-run use effect on any props re-render
     const createNewEvent = props.onNewEvent;
