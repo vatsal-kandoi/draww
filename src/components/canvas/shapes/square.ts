@@ -4,12 +4,12 @@ import { Shape } from "../../../interfaces/enums";
 import { normalizeCoordinates } from "../../utils";
 
 
-class Line extends ShapeBase {
+class Square extends ShapeBase {
 
     private fromCoords: IPoint;
     private toCoords: IPoint;
     private color: string;
-    public type: Shape = Shape.LINE;
+    public type: Shape = Shape.SQUARE;
 
     constructor(fromCoords: IPoint, toCoords: IPoint, color: string, captureDimensions: IPoint) {
         super(captureDimensions);
@@ -21,13 +21,13 @@ class Line extends ShapeBase {
     public render(contextAPI: CanvasRenderingContext2D, currentDimensions: IPoint) {
         const fromCoords = normalizeCoordinates(this.fromCoords, currentDimensions, this.captureDimensions);
         const toCoords = normalizeCoordinates(this.toCoords, currentDimensions, this.captureDimensions);
-
         contextAPI.strokeStyle = this.color;
-        contextAPI.beginPath();
-        contextAPI.moveTo(fromCoords.x, fromCoords.y);
-        contextAPI.lineTo(toCoords.x, toCoords.y);
-        contextAPI.closePath();
-        contextAPI.stroke();                   
+        contextAPI.strokeRect(
+            fromCoords.x, 
+            fromCoords.y, 
+            (toCoords.x - fromCoords.x),
+            (toCoords.y - fromCoords.y)
+        );                   
     }
 
     public exportToJson() {
@@ -41,4 +41,4 @@ class Line extends ShapeBase {
     }
 }
 
-export { Line }; 
+export { Square }; 

@@ -2,6 +2,7 @@ import { Shape } from "../../../interfaces/enums";
 import { IPoint } from "../../../interfaces/shapes";
 import { Line } from "./line";
 import { ShapeBase } from "./base";
+import { Square } from "./square";
 
 /**
  * Conver the JSON into a shape object based on the 
@@ -14,13 +15,23 @@ const createShapeFromJSON = (shapeJson: any): ShapeBase => {
             shapeJson.fromCoords as IPoint, 
             shapeJson.toCoords as IPoint,
             shapeJson.color as string,
+            shapeJson.dimensions as IPoint,
         )
     }
+    if (shapeJson.type === Shape.SQUARE) {
+        return new Square(
+            shapeJson.fromCoords as IPoint, 
+            shapeJson.toCoords as IPoint,
+            shapeJson.color as string,
+            shapeJson.dimensions as IPoint,
+        )
+    }   
     throw new Error("Unrecognized type passed in for a shape type")
 }
 
 export { 
     createShapeFromJSON, 
     ShapeBase, 
-    Line 
+    Line,
+    Square 
 }; 

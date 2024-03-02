@@ -13,6 +13,7 @@ const useShapeCaptureManager = (): ShapeCaptureManager | null => {
         if (actionType === CanvasActionType.NONE) {
             setManager(null);
         } else {
+            console.log(actionType)
             setManager(new ShapeCaptureManager(
                 actionType,
                 attributes

@@ -9,7 +9,8 @@ export enum Themes {
 }
 
 export enum Shape { 
-    LINE = "LINE"
+    LINE = "LINE",
+    SQUARE = "SQUARE"
 }
 
 export enum CanvasActionType {

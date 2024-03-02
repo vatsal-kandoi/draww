@@ -1,4 +1,5 @@
 import { CanvasActionType } from "../../../interfaces/enums";
+import { IPoint } from "../../../interfaces/shapes";
 import { Line } from "../../canvas/shapes/shape";
 import { EventBase } from "./base";
 
@@ -18,9 +19,9 @@ class PenEvent extends EventBase {
         }
     }
 
-    public render(contextAPI: CanvasRenderingContext2D) {
+    public render(contextAPI: CanvasRenderingContext2D, currentDimensions: IPoint) {
         (this.shape as Line[]).forEach((shape) => {
-            shape.render(contextAPI);
+            shape.render(contextAPI, currentDimensions);
         })
     }
 }
