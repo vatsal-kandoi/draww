@@ -5,6 +5,7 @@ import { useLanguageStore } from "../../hooks/languageprovider";
 import { EventBase } from "../events/structures/event";
 import { ShapeBase } from "./shapes/shape";
 import { getCanvasDimensions, setCanvasSizesToMax } from "../utils";
+import useThemeProvider from "../../hooks/themeprovider";
 
 const CanvasContainer = styled(Paper)(({ theme }) => ({
     ...theme.typography.body2,
@@ -28,6 +29,7 @@ export interface ICanvasRefs {
     canvasRef: HTMLCanvasElement | null;
     /** Render the given event on the canvas */
     renderEventOnCanvas(event: EventBase): void;
+    renderSelectedEventOnLayer(event: EventBase): void;
     /** Render the shape on the canvas */
     renderShapeOnCanvas(shape: ShapeBase): void;
     /** Clear the canvas of all elements */
@@ -39,6 +41,7 @@ export interface ICanvasRefs {
 
 const CanvasBase = React.forwardRef<ICanvasRefs, ICanvasProps>((props, refs) => {
     const i18n = useLanguageStore();
+    const theme = useThemeProvider();
     const canvasContainerRef = React.useRef<HTMLDivElement>(null);
     const canvasRef = React.useRef<HTMLCanvasElement>(null)
     const temporaryCanvasRef = React.useRef<HTMLCanvasElement>(null);
@@ -46,6 +49,14 @@ const CanvasBase = React.forwardRef<ICanvasRefs, ICanvasProps>((props, refs) => 
     React.useImperativeHandle(refs, () => ({
         canvasContainerRef: canvasContainerRef.current,
         canvasRef: canvasRef.current,
+        renderSelectedEventOnLayer: (event: EventBase) => {
+            if (temporaryCanvasRef.current === null) return;
+            const contextAPI = temporaryCanvasRef.current.getContext("2d");
+            if (contextAPI === null) return;
+
+            contextAPI.clearRect(0, 0, temporaryCanvasRef.current.width, temporaryCanvasRef.current.height);
+            event.select(contextAPI, getCanvasDimensions(temporaryCanvasRef.current), theme.theme.palette.info[theme.theme.palette.mode]);            
+        },
         renderShapeOnCanvas: (shape: ShapeBase) => {
             if (canvasRef.current === null) return;
             const contextAPI = canvasRef.current.getContext("2d");

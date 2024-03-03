@@ -6,8 +6,8 @@ import { normalizeCoordinates } from "../../utils";
 
 class Square extends ShapeBase {
 
-    private fromCoords: IPoint;
-    private toCoords: IPoint;
+    public fromCoords: IPoint;
+    public toCoords: IPoint;
     private color: string;
     public type: Shape = Shape.SQUARE;
 
@@ -38,6 +38,16 @@ class Square extends ShapeBase {
             toCoords: this.toCoords,
             dimensions: this.captureDimensions,
         }
+    }
+
+
+    public hasOverlapWithCoordinates(coords: IPoint) {
+        return ((this.fromCoords.x > this.toCoords.x) ? 
+                (coords.x <= this.fromCoords.x && coords.x >= this.toCoords.x) : 
+                (coords.x >= this.fromCoords.x && coords.x <= this.toCoords.x)) && 
+                ((this.fromCoords.y > this.toCoords.y) ? 
+                (coords.y <= this.fromCoords.y && coords.y >= this.toCoords.y) : 
+                (coords.y >= this.fromCoords.y && coords.y <= this.toCoords.y) )
     }
 }
 

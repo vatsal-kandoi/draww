@@ -22,6 +22,10 @@ class ShapeBase {
     public exportToJson() {
         throw new Error("Not implemented by the class");
     }
+
+    public hasOverlapWithCoordinates(coords: IPoint) {
+        throw new Error("Not implemented");
+    }
 }
 
 export { ShapeBase }; 

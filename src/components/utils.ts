@@ -99,3 +99,10 @@ export function normalizeCoordinates(coords: IPoint, currentDimensions: IPoint, 
         y: ( coords.y / captureDimensions.y ) * currentDimensions.y
     }
 }
+
+export function distance(pointA: IPoint, pointB: IPoint) {
+    return (
+        (pointA.x - pointB.x) ** 2 + 
+        (pointA.y - pointB.y) ** 2        
+    ) ** 0.5;
+}

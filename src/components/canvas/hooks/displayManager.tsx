@@ -1,7 +1,7 @@
 import * as React from "react";
 import { EventBase } from "../../events/structures/base";
 import { ICanvasRefs } from "../canvas-base";
-import { DEFAULT_NULL_POINT, useMouseCurrentPositionProvider } from "../../../hooks/mousePositionProvider";
+import { DEFAULT_NULL_POINT } from "../../../hooks/mousePositionProvider";
 import { IPoint } from "../../../interfaces";
 import { useSelector } from "react-redux";
 import ShapeCaptureManager from "../managers/capture";
@@ -15,14 +15,12 @@ import ShapeCaptureManager from "../managers/capture";
 const useDisplayManager = (
     canvasRefs: ICanvasRefs | null,
     isMouseOnCanvas: boolean,
-    manager: ShapeCaptureManager | null
+    manager: ShapeCaptureManager | null,
+    clickPosition: IPoint,
+    currentPositions: IPoint,
+    onClick: boolean,
 ): EventBase | undefined => {
     const [event, setEvent] = React.useState<EventBase>();
-    const {
-        clickPosition,
-        currentPositions,
-        onClick
-    } = useMouseCurrentPositionProvider();
 
     const [prevOrInitialPosition, setPrevPosition] = React.useState<IPoint>(DEFAULT_NULL_POINT);
     const user: string = useSelector(state => (state as any)?.user?.user_name);    

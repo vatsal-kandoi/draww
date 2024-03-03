@@ -1,13 +1,13 @@
 import { ShapeBase } from "./base";
 import { IPoint } from "../../../interfaces";
 import { Shape } from "../../../interfaces/enums";
-import { normalizeCoordinates } from "../../utils";
+import { abs, distance, normalizeCoordinates } from "../../utils";
 
 
 class Line extends ShapeBase {
 
-    private fromCoords: IPoint;
-    private toCoords: IPoint;
+    public fromCoords: IPoint;
+    public toCoords: IPoint;
     private color: string;
     public type: Shape = Shape.LINE;
 
@@ -38,6 +38,13 @@ class Line extends ShapeBase {
             toCoords: this.toCoords,
             dimensions: this.captureDimensions,
         }
+    }
+
+    public hasOverlapWithCoordinates(coords: IPoint) {
+        return abs(
+            distance(this.fromCoords, this.toCoords) - 
+            (distance(this.fromCoords, coords) + distance(coords, this.toCoords))
+        ) < 10;
     }
 }
 

@@ -49,11 +49,43 @@ class EventBase {
         throw new Error("Not implemented");
     }
 
+    public select(contextAPI: CanvasRenderingContext2D, currentDimensions: IPoint, activeColor: string) {
+        this.render(contextAPI, currentDimensions);
+        const {fromCoords, toCoords} = this.captureCoordinatesForBox();
+        this.renderBorderForSelection(contextAPI, fromCoords, toCoords, activeColor);
+    }
+
+    protected captureCoordinatesForBox(): {fromCoords: IPoint; toCoords: IPoint } {
+        throw new Error("Not implemented");
+    }
+
     /**
      * Export the event as a JSON object
      */
     public exportToJson() {
         throw new Error("Not implemented");
+    }
+
+    public hasOverlapWithCoordinates(coords: IPoint): boolean {
+        throw new Error("Not implemented");
+    }
+
+    public modifyPosition() {
+        throw new Error("Not implemented");
+    }
+
+    private renderBorderForSelection(contextAPI: CanvasRenderingContext2D, fromCoords: IPoint, toCoords: IPoint, activeColor: string) {
+        contextAPI.lineCap = 'square';
+        contextAPI.setLineDash([6]);
+        contextAPI.strokeStyle = activeColor;
+        contextAPI.strokeRect(
+            fromCoords.x, 
+            fromCoords.y, 
+            (toCoords.x - fromCoords.x),
+            (toCoords.y - fromCoords.y)
+        );                   
+        // Reset the line dash
+        contextAPI.setLineDash([])
     }
 }
 
