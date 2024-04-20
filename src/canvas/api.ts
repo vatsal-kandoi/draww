@@ -1,4 +1,4 @@
-import { IInitializeCanvas, IMouseMoveEvent, IShapeChange, IUserSet, Point, ShapeTypes, UserAction } from "../interfaces";
+import { EventJSONBase, IInitCanvas, IInitUser, IMouseMoveEvent, INewEvent, IShapeChange, Point, ShapeTypes, UserAction } from "../interfaces";
 
 export function setupCanvasRenderer(): CanvasManagerInterface {
     const worker: Worker = new Worker(
@@ -24,19 +24,19 @@ export class CanvasManagerInterface {
     public setUser(user_name: string): void {
         if (window.Worker) {
             this.worker.postMessage({
-                action: UserAction.SET_USER,
+                action: UserAction.INIT_USER,
                 user_name: user_name,
-            } as IUserSet)
+            } as IInitUser)
         }
     }
 
     public setCanvas(canvas: OffscreenCanvas, dimensions: Point ): void {
         if (window.Worker) {
             this.worker.postMessage({
-                action: UserAction.SET_CANVAS,
+                action: UserAction.INIT_CANVAS,
                 canvas: canvas,
                 dimensions: dimensions,
-            } as IInitializeCanvas, [canvas]);
+            } as IInitCanvas, [canvas]);
         }
     }
 
@@ -56,6 +56,14 @@ export class CanvasManagerInterface {
                 point: point,
                 isMouseDown: isMouseDown
             } as IMouseMoveEvent);
+        }
+    }
+
+    public setupNewEventListener(cb: (eventJSON: EventJSONBase) => void) {
+        if (window.Worker) {
+            this.worker.onmessage = (ev: MessageEvent) => {
+                cb((ev.data as INewEvent).event);
+            };
         }
     }
 }

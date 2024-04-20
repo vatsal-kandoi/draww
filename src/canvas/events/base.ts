@@ -1,6 +1,7 @@
-import { EventJSONBase, IEventBase, Point } from "../../interfaces";
+import { EventJSONBase, IEventBase, Point, ShapeTypes } from "../../interfaces";
 
 export class EventBase implements IEventBase {
+    public type: ShapeTypes = ShapeTypes.NONE;    
     public event_name: string;
     public user_name: string;
     public description: string;

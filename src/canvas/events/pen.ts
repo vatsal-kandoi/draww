@@ -1,8 +1,9 @@
-import { IPenEvent, PenJSON, Point } from "../../interfaces";
+import { IPenEvent, PenJSON, Point, ShapeTypes } from "../../interfaces";
 import { Line } from "../structures/line";
 import { EventBase } from "./base";
 
 export class PenEvent extends EventBase implements IPenEvent {
+    public type: ShapeTypes = ShapeTypes.LINE;    
     shape: Line[];
 
     constructor(capture_canvas_dimensions: Point, current_canvas_dimensions: Point, user_name: string, description: string, shape: Line[]) {
@@ -21,6 +22,7 @@ export class PenEvent extends EventBase implements IPenEvent {
 
     public exportToJson(): PenJSON {
         return {
+            type: this.type,
             event_name: this.event_name,
             user_name: this.user_name,
             description: this.description,
@@ -29,4 +31,13 @@ export class PenEvent extends EventBase implements IPenEvent {
             shape: this.shape.map(line => line.exportToJson())
         }
     }
+}
+
+export default function capturePenEvent(
+    user_name: string,
+    shape: Line[],
+    dimensions: Point,
+): PenEvent {
+    const event = new PenEvent(dimensions, dimensions, user_name, "", shape);
+    return event;
 }

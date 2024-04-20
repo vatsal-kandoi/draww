@@ -1,11 +1,15 @@
 import * as React from 'react';
 import { ThemeProvider } from '@mui/material/styles';
-import Canvas from './components/canvas/canvas';
+import Main from './pages/main';
+import store from './redux/store';
+import { Provider } from 'react-redux';
 
 const App: React.FC<{}> = () => {
 
   return (
-    <Canvas />
+    <Provider store={store}>
+      <Main />
+    </Provider>
   );
 }
 

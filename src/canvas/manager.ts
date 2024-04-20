@@ -1,47 +1,36 @@
-import { Point } from "../interfaces";
+import {  Point, ShapeTypes } from "../interfaces";
+import { EventBase } from "./events/base";
+import { EventManager } from "./events/manager";
 import { ShapeManager } from "./structures/manager";
 
-export class CanvasManager {
-    user_name: string | null;
-    offscreen_canvas: OffscreenCanvasRenderingContext2D | null;
-    shapeManager: ShapeManager;
-    isMouseDown: boolean = false;
-    dimensions: Point = {x: -1, y: -1};
 
-    constructor() {
-        this.user_name = null;
-        this.offscreen_canvas = null;
-        this.shapeManager = new ShapeManager();
+export class Manager {
+
+    eventManager: EventManager = new EventManager();
+    shapeManager: ShapeManager = new ShapeManager();
+
+    public onUserInit(user_name: string): void {
+        this.eventManager.initialise(user_name);
     }
 
-    public registerUser(user_name: string) {
-        this.user_name = user_name;
+    public onCanvasInit(canvas: OffscreenCanvas, dimensions: Point): void {
+        this.eventManager.initialise("Vatsal");
+        this.shapeManager.initialise(canvas, dimensions);
     }
 
-    public registerCanvas(canvas: OffscreenCanvas, dimensions: Point ) {
-        const context = canvas.getContext("2d") 
-        if (context=== null) return;
-        this.offscreen_canvas = context as OffscreenCanvasRenderingContext2D;
-        this.dimensions = dimensions;
+    public onSelectedShapeChange(selectedShape: ShapeTypes): void {
+        this.shapeManager.onSelectedShapeChange(selectedShape);
+        this.shapeManager.reset();
     }
 
-    public registerMouseMoveEvent(point: Point, isMouseDown: boolean) { 
-        // Mouse has been pressed previously
-        if (this.offscreen_canvas === null) return;
-        console.log(point);
-        if (this.isMouseDown) {
-            // Still pressed
-            if (isMouseDown) {
-                this.shapeManager.captureShape(this.offscreen_canvas, point, this.dimensions);
-            } else {
-                // Capture shape and send to user
-                this.shapeManager.finalizeShape();
-            }
-        } else {
-            if (isMouseDown) {
-                this.shapeManager.captureShape(this.offscreen_canvas, point, this.dimensions);
-            }
-        }
-        this.isMouseDown = isMouseDown;
+    public onMouseMoveEvent(point: Point, isMouseDown: boolean): null | EventBase {
+        const completed = this.shapeManager.onMouseMoveEvent(point, isMouseDown);
+        if (!completed) return null;        
+
+        const event = this.eventManager.createEvent(this.shapeManager);
+        if (event === null) return null;
+
+        this.shapeManager.reset();
+        return event;
     }
 }

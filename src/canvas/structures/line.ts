@@ -30,3 +30,15 @@ export class Line extends ShapeBase implements ILine {
         }
     }
 }
+
+export default function captureLine(
+    current_position: Point, 
+    previous_position: Point, 
+    context: OffscreenCanvasRenderingContext2D, 
+    capture_canvas_dimensions: Point,
+    current_canvas_dimensions: Point,
+): LineJSON {
+    const line = new Line(previous_position, current_position);
+    line.render(context, capture_canvas_dimensions, current_canvas_dimensions);
+    return line;
+}

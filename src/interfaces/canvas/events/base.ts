@@ -1,7 +1,8 @@
 import { Point } from "../base";
-import { IShapeJSONBase } from "../shapes/base";
+import { IShapeJSONBase, ShapeTypes } from "../shapes/base";
 
 export interface EventJSONBase {
+    type: ShapeTypes,
     event_name: string;
     user_name: string;
     description: string;
@@ -11,6 +12,7 @@ export interface EventJSONBase {
 }
 
 export interface IEventBase {
+    type: ShapeTypes;
     event_name: string;
     user_name: string;
     description: string;
