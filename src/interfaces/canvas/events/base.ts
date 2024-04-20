@@ -5,7 +5,6 @@ export interface EventJSONBase {
     type: ShapeTypes,
     event_name: string;
     user_name: string;
-    description: string;
     shape: IShapeJSONBase;
     capture_canvas_dimensions: Point,
     current_canvas_dimensions: Point,
@@ -15,7 +14,6 @@ export interface IEventBase {
     type: ShapeTypes;
     event_name: string;
     user_name: string;
-    description: string;
     capture_canvas_dimensions: Point;
     current_canvas_dimensions: Point;
 

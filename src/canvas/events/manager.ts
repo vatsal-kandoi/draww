@@ -6,6 +6,7 @@ import capturePenEvent from "./pen";
 export class EventManager {
  
     user_name: string | null =  null;
+    events: EventBase[] = [];
 
     public isInitialised(): boolean {
         return this.user_name !== null;
@@ -20,7 +21,9 @@ export class EventManager {
 
         switch (shapeManager.active_shape) {
             case ShapeTypes.LINE: {
-                return capturePenEvent(this.user_name, shapeManager.shape, shapeManager.current_canvas_dimensions);
+                const event = capturePenEvent(this.user_name, shapeManager.shape, shapeManager.current_canvas_dimensions);
+                this.events.push(event);
+                return event;
             }
         }
         return null;

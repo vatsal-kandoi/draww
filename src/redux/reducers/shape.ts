@@ -4,7 +4,7 @@ const initialState = {
     selectedShape: ShapeTypes.NONE,
 };
   
-const canvasActionReducer = (
+const selectedShapeReducer = (
         state: { selectedShape: ShapeTypes }= initialState, 
         action: {
             type: UserAction,
@@ -22,4 +22,4 @@ const canvasActionReducer = (
     }
 };
   
-export default canvasActionReducer;
+export default selectedShapeReducer;

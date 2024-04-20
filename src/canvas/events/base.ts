@@ -4,15 +4,13 @@ export class EventBase implements IEventBase {
     public type: ShapeTypes = ShapeTypes.NONE;    
     public event_name: string;
     public user_name: string;
-    public description: string;
     public capture_canvas_dimensions: Point;
     public current_canvas_dimensions: Point;
 
-    constructor(capture_canvas_dimensions: Point, current_canvas_dimensions: Point, user_name: string, description: string) {
+    constructor(capture_canvas_dimensions: Point, current_canvas_dimensions: Point, user_name: string) {
         this.current_canvas_dimensions = current_canvas_dimensions;
         this.capture_canvas_dimensions = capture_canvas_dimensions;
         this.event_name = this.getNewEventID();
-        this.description = description;
         this.user_name = user_name;
     }
 

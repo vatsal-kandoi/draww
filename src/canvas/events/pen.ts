@@ -6,11 +6,10 @@ export class PenEvent extends EventBase implements IPenEvent {
     public type: ShapeTypes = ShapeTypes.LINE;    
     shape: Line[];
 
-    constructor(capture_canvas_dimensions: Point, current_canvas_dimensions: Point, user_name: string, description: string, shape: Line[]) {
-        super(capture_canvas_dimensions, current_canvas_dimensions, user_name, description);
+    constructor(capture_canvas_dimensions: Point, current_canvas_dimensions: Point, user_name: string, shape: Line[]) {
+        super(capture_canvas_dimensions, current_canvas_dimensions, user_name);
         this.shape = shape;
     }
-
 
     public render(contextAPI: OffscreenCanvasRenderingContext2D) {
         this.shape.forEach(line => line.render(contextAPI, this.capture_canvas_dimensions, this.current_canvas_dimensions));
@@ -25,7 +24,6 @@ export class PenEvent extends EventBase implements IPenEvent {
             type: this.type,
             event_name: this.event_name,
             user_name: this.user_name,
-            description: this.description,
             capture_canvas_dimensions: this.capture_canvas_dimensions,
             current_canvas_dimensions: this.current_canvas_dimensions,
             shape: this.shape.map(line => line.exportToJson())
@@ -38,6 +36,6 @@ export default function capturePenEvent(
     shape: Line[],
     dimensions: Point,
 ): PenEvent {
-    const event = new PenEvent(dimensions, dimensions, user_name, "", shape);
+    const event = new PenEvent(dimensions, dimensions, user_name, shape);
     return event;
 }
