@@ -1,14 +1,8 @@
 import { combineReducers } from 'redux';
-import canvasActionReducer from "./canvasActionReducer";
-import attributeOptionsReducer from "./attributeActionReducer"
-import canvasEventsReducer from './eventsReducer';
-import userReducer from "./userReducer";
+import eventsReducer from './events';
 
 const rootReducer = combineReducers({
-  selectedCanvasAction: canvasActionReducer,
-  attributes: attributeOptionsReducer,
-  events: canvasEventsReducer,
-  user: userReducer,
+    events: eventsReducer
 });
 
 export default rootReducer;

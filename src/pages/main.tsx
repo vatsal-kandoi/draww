@@ -1,76 +1,48 @@
+
 import * as React from "react";
-import DrawActions from "../components/button-groups/draw-actions";
-import DrawCustomizations from "../components/button-groups/draw-customizations";
-import CanvasInteractive from "../components/canvas/canvas-interactive";
-import { Stack, styled } from "@mui/material";
-import PageActions from "../components/button-groups/page-actions";
-import Events from "../components/events/events";
+import Canvas, { ICanvasRefs } from "../components/canvas/canvas";
 import { connect } from "react-redux";
-import { EventBase } from "../components/events/structures/base";
-import { CanvasEventType } from "../interfaces/enums";
-import { onDownloadEvents, onUploadEvents } from "../components/utils";
+import { EventJSONBase, ShapeTypes, UserAction } from "../interfaces";
+import ShapeOptions from "../components/button-groups/shape-options";
 
-const ButtonStack = styled(Stack)(({ theme }) => ({
-    ...theme.typography.body2,
-    position: "absolute",
-    top: theme.spacing(1),
-    right: theme.spacing(3),
-    width: "300px"
-}));
-
-const CanvasPage: React.FC<{
-    events: EventBase[];
-    deleteAllEvents: () => void;
-    deleteEvent: (event: EventBase) => void;
-    loadEventsFromJSON: (events: EventBase[]) => void;
+const Main: React.FC<{
+    onNewEvent: (eventJSON: EventJSONBase) => void;
 }> = (props) => {
-    const downloadEvents = () => {
-        onDownloadEvents(props.events);
-    }
+    const canvasRef = React.useRef<ICanvasRefs>(null);
+    const {onNewEvent} = props;
 
-    const uploadEvents = () => {
-        onUploadEvents((events: EventBase[]) => {
-            props.loadEventsFromJSON(events);
-        });
+    React.useEffect(() => {
+        if (canvasRef.current !== null) {
+            canvasRef.current.setupNewEventListener((event) => {
+                console.log(event);
+                onNewEvent(event);
+            })
+        }
+    }, [canvasRef, onNewEvent]);
+
+    const onShapeSelectionChange = (shape: ShapeTypes) => {
+        if (canvasRef.current !== null) {
+            canvasRef.current.sendShapeSelectionChange(shape);
+        }        
     }
 
 
     return (
         <>
-            <CanvasInteractive />
-            <DrawActions />
-            <DrawCustomizations />
-            <ButtonStack direction="column"
-                    alignItems="center"
-                    spacing={2}>
-                <PageActions showEventsDownloadBtn={true}
-                        showEventsUploadBtn={true}
-                        onEventsDownloadBtnClick={downloadEvents}
-                        onEventsUploadBtnClick={uploadEvents} />
-                <Events events={props.events}
-                        onAllEventsDeleteBtnClick={props.deleteAllEvents}
-                        onEventDeleteBtnClick={props.deleteEvent} />                   
-            </ButtonStack>
+            <ShapeOptions onShapeSelectionChange={onShapeSelectionChange} />
+            <Canvas ref={canvasRef}/>  
         </>
     );
-};
+}
 
-const mapStateToProps = (state: any) => ({
-    events: state.events.events,
-});
 
 const mapDispatchToProps = (dispatch: any) => ({
-    deleteEvent: (event: EventBase) => dispatch({ 
-        type: CanvasEventType.DELETE,
-        payload: event
-    }),
-    deleteAllEvents: () => dispatch({
-        type: CanvasEventType.CLEAR_ALL,
-    }),
-    loadEventsFromJSON: (events: EventBase[]) => dispatch({ 
-        type: CanvasEventType.LOAD,
-        payload: events
-    }),
+    onNewEvent: (event: EventJSONBase) => {
+        dispatch({
+            type: UserAction.NEW_EVENT_ADDED,
+            payload: event
+        })
+    },
 });
-  
-export default connect(mapStateToProps, mapDispatchToProps)(CanvasPage);
+
+export default connect(null , mapDispatchToProps)(React.memo(Main));
