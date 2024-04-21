@@ -24,6 +24,7 @@ export class Manager {
     }
 
     public onMouseMoveEvent(point: Point, isMouseDown: boolean): null | EventBase {
+        if (!this.shapeManager.isInShapeCaptureMode()) return null;
         const completed = this.shapeManager.onMouseMoveEvent(point, isMouseDown);
         if (!completed) return null;        
 

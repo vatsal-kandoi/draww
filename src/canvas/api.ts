@@ -21,7 +21,7 @@ export class CanvasManagerInterface {
 
     }
 
-    public setUser(user_name: string): void {
+    public initialiseUser(user_name: string): void {
         if (window.Worker) {
             this.worker.postMessage({
                 action: UserAction.INIT_USER,
@@ -30,7 +30,7 @@ export class CanvasManagerInterface {
         }
     }
 
-    public setCanvas(canvas: OffscreenCanvas, dimensions: Point ): void {
+    public initialiseCanvas(canvas: OffscreenCanvas, dimensions: Point ): void {
         if (window.Worker) {
             this.worker.postMessage({
                 action: UserAction.INIT_CANVAS,

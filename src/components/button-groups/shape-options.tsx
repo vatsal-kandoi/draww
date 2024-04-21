@@ -4,9 +4,8 @@ import Stack from '@mui/material/Stack';
 import { styled } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
 import ModeIcon from '@mui/icons-material/Mode';
-import { connect } from "react-redux";
 import { Tooltip } from "@mui/material";
-import { ShapeTypes, UserAction } from "../../interfaces";
+import { ShapeTypes } from "../../interfaces";
 
 const ShapeOptionsContainer = styled(Paper)(({ theme }) => ({
     ...theme.typography.body2,
@@ -22,12 +21,21 @@ const ShapeOptionsContainer = styled(Paper)(({ theme }) => ({
 
 
 const ShapeOptions: React.FC<{
-    selectedShape: ShapeTypes,
     onShapeSelectionChange: (shape: ShapeTypes) => void;
 }> = (props) => {
 
-    const {onShapeSelectionChange, selectedShape} = props;
+    const {onShapeSelectionChange} = props;
+    const [selectedShape, setSelectedShape] = React.useState<ShapeTypes>(ShapeTypes.NONE);
 
+    const onShapeChange = (shape: ShapeTypes) => {
+        if (selectedShape === shape) {
+            onShapeSelectionChange(ShapeTypes.NONE);
+            setSelectedShape(ShapeTypes.NONE);
+        } else {
+            onShapeSelectionChange(shape);
+            setSelectedShape(shape);
+        }
+    };
 
     return (
         <ShapeOptionsContainer square={false} 
@@ -42,7 +50,7 @@ const ShapeOptions: React.FC<{
                 <Tooltip title={"Choose Pen"}>
                     <IconButton id="pen"
                             color={(selectedShape === ShapeTypes.LINE) ? "primary" : "default"}
-                            onClick={() => onShapeSelectionChange(ShapeTypes.LINE)}
+                            onClick={() => onShapeChange(ShapeTypes.LINE)}
                             aria-label={"pen"}>
                         <ModeIcon />
                     </IconButton>
@@ -51,18 +59,5 @@ const ShapeOptions: React.FC<{
         </ShapeOptionsContainer>
     );
 }
-
-const mapStateToProps = (state: any) => ({
-    selectedShape: state.shape.selectedShape
-});
   
-const mapDispatchToProps = (dispatch: any) => ({
-    onShapeSelectionChange: (shape: ShapeTypes) => {
-        dispatch({
-            type: UserAction.SHAPE_CHANGE,
-            payload: shape
-        })
-    },
-});
-  
-export default connect(mapStateToProps, mapDispatchToProps)(ShapeOptions);
+export default ShapeOptions;

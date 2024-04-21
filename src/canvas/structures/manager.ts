@@ -22,6 +22,10 @@ export class ShapeManager {
         return this.offscreen_canvas !== null;
     }
 
+    public isInShapeCaptureMode(): boolean {
+        return this.active_shape !== ShapeTypes.NONE;
+    }
+
     public canCaptureShape(): boolean {
         return this.last_coordinates.x !== DEFAULT_POINT.x && this.last_coordinates.y !== DEFAULT_POINT.y;
     }
@@ -50,13 +54,13 @@ export class ShapeManager {
             this.last_coordinates = point;
             return false;
         } else {
+            if (this.shape === null) return false;
             return true;
         }
     }
 
     public captureShape(current_position: Point) {
         if (this.offscreen_canvas === null) return;
-        console.log(this.active_shape)
         switch (this.active_shape) {
             case ShapeTypes.LINE: {
                 const line = captureLine(

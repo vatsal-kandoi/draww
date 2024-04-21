@@ -1,8 +1,8 @@
 import { combineReducers } from 'redux';
-import selectedShapeReducer from "./shape";
+import eventsReducer from './events';
 
 const rootReducer = combineReducers({
-    shape: selectedShapeReducer,
+    events: eventsReducer
 });
 
 export default rootReducer;

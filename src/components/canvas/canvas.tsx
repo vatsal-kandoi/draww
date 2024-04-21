@@ -3,14 +3,13 @@ import { CanvasManagerInterface, setupCanvasRenderer } from "../../canvas/api";
 import CanvasRaw from "./base";
 import { EventJSONBase, ShapeTypes } from "../../interfaces";
 
+export interface ICanvasRefs {
+    workerAPI: CanvasManagerInterface;    
+    sendShapeSelectionChange: (shape: ShapeTypes) => void;
+    setupNewEventListener: (cb: (event: EventJSONBase) => void) => void;
+}
 
-const Canvas: React.FC<{
-    onNewEvent?: (eventJSON: EventJSONBase) => void;
-    selectedShape: ShapeTypes,
-}> = (props) => {
-
-    const { onNewEvent, selectedShape } = props;
-
+const Canvas = React.forwardRef<ICanvasRefs, {}>((props, refs) => {
     const api: CanvasManagerInterface = React.useMemo(() => {
         return setupCanvasRenderer();
     }, []);
@@ -30,24 +29,27 @@ const Canvas: React.FC<{
         };
     }, [api, mouseMoveEvent]);
 
-    React.useEffect(() => {
-        api.sendShapeSelectionChange(selectedShape);
-    }, [api, selectedShape])
+    React.useImperativeHandle(refs, () => ({
+        workerAPI: api,
+        sendShapeSelectionChange: (shape: ShapeTypes) => {
+            api.sendShapeSelectionChange(shape);
+        },
+        setupNewEventListener: (cb: (event: EventJSONBase) => void): void => {
+            api.setupNewEventListener(cb);
+        }
+    }));
 
     const onCanvasMount = React.useCallback((canvas: HTMLCanvasElement) => {
         const offscreen  = canvas.transferControlToOffscreen();
-        api.setCanvas(offscreen, {x: canvas.width, y: canvas.height});
+        api.initialiseCanvas(offscreen, {x: canvas.width, y: canvas.height});
     }, [api]);
-
-    if (onNewEvent !== undefined)
-        api.setupNewEventListener(onNewEvent)
 
     return (
         <>
             <CanvasRaw onCanvasMount={onCanvasMount} /> 
         </>
     );
-} 
+});
 
 export default React.memo(Canvas);
 
