@@ -1,7 +1,7 @@
 import * as React from 'react';
 import ThemeProviderContext from "./contexts/themeprovider";
 import { ThemeProvider } from '@mui/material/styles';
-import Main from './pages/main';
+import Main from './views/main';
 import store from './redux/store';
 import { Provider } from 'react-redux';
 import useThemeProvider from './hooks/themeprovider';
