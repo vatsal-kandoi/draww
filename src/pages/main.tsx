@@ -2,13 +2,15 @@
 import * as React from "react";
 import Canvas, { ICanvasRefs } from "../components/canvas/canvas";
 import { connect } from "react-redux";
-import { EventJSONBase, ShapeTypes, UserAction } from "../interfaces";
+import { EventJSONBase, IProperties, ShapeTypes, UserAction } from "../interfaces";
 import ShapeOptions from "../components/button-groups/shape-options";
+import DrawProperties from "../components/button-groups/draw-properties";
 
 const Main: React.FC<{
     onNewEvent: (eventJSON: EventJSONBase) => void;
 }> = (props) => {
     const canvasRef = React.useRef<ICanvasRefs>(null);
+    const [shapeType, setShapeType] = React.useState<ShapeTypes>(ShapeTypes.NONE);
     const {onNewEvent} = props;
 
     React.useEffect(() => {
@@ -23,15 +25,25 @@ const Main: React.FC<{
     const onShapeSelectionChange = (shape: ShapeTypes) => {
         if (canvasRef.current !== null) {
             canvasRef.current.sendShapeSelectionChange(shape);
+            setShapeType(shape);
         }        
     }
 
+    const onPropertiesChange = (properties: IProperties) => {
+        if (canvasRef.current !== null) {
+            canvasRef.current.sendPropertiesChange(properties);
+        }        
+    }    
 
     return (
         <>
-            <ShapeOptions onShapeSelectionChange={onShapeSelectionChange} />
             <Canvas ref={canvasRef}/>  
-        </>
+            <ShapeOptions onShapeSelectionChange={onShapeSelectionChange} />
+            <DrawProperties 
+                shapeType={shapeType}
+                onPropertiesChange={onPropertiesChange}                
+            />
+       </>
     );
 }
 

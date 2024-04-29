@@ -6,10 +6,20 @@ export enum UserAction {
     SHAPE_CHANGE = "SHAPE_CHANGE",
     INIT_USER = "INIT_USER",
     INIT_CANVAS = "INIT_CANVAS",
+    INIT_TEMPORARY_CANVAS = "INIT_TEMPORARY_CANVAS",
     MOUSE_MOVE_EVENT = "MOUSE_MOVE_EVENT",
     LOAD_EVENTS = "LOAD_EVENTS",
     DELETE_ALL_EVENTS = "DELETE_ALL_EVENTS",
     NEW_EVENT_ADDED = "NEW_EVENT_ADDED",
+    PROPERTIES_CHANGE = "PROPERTIES_CHANGE"
+}
+
+export interface IProperties {
+    borderColor: string;
+}
+
+export interface IPropertiesChange extends IProperties {
+    action: UserAction;
 }
 
 export interface IShapeChange {
@@ -23,6 +33,12 @@ export interface IInitUser {
 }
 
 export interface IInitCanvas {
+    action: UserAction;
+    canvas: OffscreenCanvas;
+    dimensions: Point,
+}
+
+export interface IInitTemporaryCanvas {
     action: UserAction;
     canvas: OffscreenCanvas;
     dimensions: Point,

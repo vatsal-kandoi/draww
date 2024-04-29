@@ -1,5 +1,5 @@
-import { IInitCanvas, IMouseMoveEvent, IInitUser, UserAction, IShapeChange, INewEvent } from "../interfaces";
-import { Manager } from "./manager";
+import { IInitCanvas, IMouseMoveEvent, IInitUser, UserAction, IShapeChange, INewEvent, IInitTemporaryCanvas, IPropertiesChange } from "../interfaces";
+import { Manager } from "./managers";
 
 const manager = new Manager();
 
@@ -18,6 +18,13 @@ onmessage = (e: MessageEvent ) => {
             );
             break;
         }
+        case UserAction.INIT_TEMPORARY_CANVAS: {
+            manager.onTemporaryCanvasInit(
+                (data as IInitTemporaryCanvas).canvas, 
+                (data as IInitTemporaryCanvas).dimensions
+            );
+            break;
+        }
         case UserAction.SHAPE_CHANGE: {
             manager.onSelectedShapeChange((data as IShapeChange).shape);
             break;
@@ -33,6 +40,10 @@ onmessage = (e: MessageEvent ) => {
                     event: event.exportToJson(),
                 } as INewEvent);
             }
+            break;
+        }
+        case UserAction.PROPERTIES_CHANGE: {
+            manager.onPropertiesChange((data as IPropertiesChange));
             break;
         }
     }

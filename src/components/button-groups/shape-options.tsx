@@ -6,6 +6,7 @@ import IconButton from '@mui/material/IconButton';
 import ModeIcon from '@mui/icons-material/Mode';
 import { Tooltip } from "@mui/material";
 import { ShapeTypes } from "../../interfaces";
+import { Square } from "@mui/icons-material";
 
 const ShapeOptionsContainer = styled(Paper)(({ theme }) => ({
     ...theme.typography.body2,
@@ -55,6 +56,14 @@ const ShapeOptions: React.FC<{
                         <ModeIcon />
                     </IconButton>
                 </Tooltip>
+                <Tooltip title={"Choose Square"}>
+                    <IconButton id="square"
+                            color={(selectedShape === ShapeTypes.SQUARE) ? "primary" : "default"}
+                            onClick={() => onShapeChange(ShapeTypes.SQUARE)}
+                            aria-label={"square"}>
+                        <Square />
+                    </IconButton>
+                </Tooltip>                
             </Stack>
         </ShapeOptionsContainer>
     );
