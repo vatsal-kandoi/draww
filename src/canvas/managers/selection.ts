@@ -35,6 +35,7 @@ export class SelectionManager {
 
     public onSelectedShapeChange(selected_shape: ShapeTypes) {
         this.active_shape = selected_shape;
+        this.reset();
     }
 
     public isShiftingEvent(point: Point): boolean {

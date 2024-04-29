@@ -33,6 +33,7 @@ export class ShapeManager {
 
     public onSelectedShapeChange(selected_shape: ShapeTypes) {
         this.active_shape = selected_shape;
+        this.reset();
     }
     
     public onMouseMoveEvent(point: Point, isMouseDown: boolean) : ShapeBase | ShapeBase[] | null  {
@@ -43,24 +44,30 @@ export class ShapeManager {
             return null;
         }
         if (isMouseDown) {
-            // Continue capturing shape
-            const shape = this.captureShape(point);
-            
-            if (shape === null) return null;
-
+            this.captureShape(point);
             this.last_coordinates = point;
-            this.renderManager.renderShape(shape);
             return null;
         } else {
             // Stop capturing shape and finalize
             const shape = (this.shape !== null) ? this.shape : null;
+
             this.reset();
+            this.renderShape(shape);
 
             return shape;
         }
     }
 
-    public captureShape(current_position: Point): ShapeBase | null {
+    private renderShape(shape: ShapeBase | ShapeBase[]): void {
+        switch (this.active_shape) {
+            case ShapeTypes.LINE: {
+                (shape as Line[]).forEach((line) => this.renderManager.renderShape(line));
+                break;
+            }
+        }
+    }
+
+    private captureShape(current_position: Point) {
         switch (this.active_shape) {
             case ShapeTypes.LINE: {
                 const line = new Line(this.last_coordinates, current_position);
@@ -69,9 +76,8 @@ export class ShapeManager {
                     this.shape = [];
 
                 this.shape.push(line);
-                return line;
+                this.renderManager.renderShapeOnLayer(line);
             }
         }
-        return null;
     }
 }

@@ -30,19 +30,19 @@ export class Manager {
     public onSelectedShapeChange(selectedShape: ShapeTypes): void {
         this.shapeManager.onSelectedShapeChange(selectedShape);
         this.selectionManager.onSelectedShapeChange(selectedShape);
-        this.shapeManager.reset();
-        this.selectionManager.reset();
     }
 
     public onMouseMoveEvent(point: Point, isMouseDown: boolean): null | EventBase {
-        if (this.selectionManager.isEnabled()) {
-            const event = this.selectionManager.onMouseMoveEvent(point, isMouseDown);
+        if (this.selectionManager.isEnabled()) return this.onMouseMoveForSelection(point, isMouseDown);
+        return this.onMouseMoveForDraw(point, isMouseDown);
+    }
 
-            if (event === null)
-                return null;
+    private onMouseMoveForSelection(point: Point, isMouseDown: boolean): null | EventBase {
+        const event = this.selectionManager.onMouseMoveEvent(point, isMouseDown);
+        return event;
+    }
 
-            return event;
-        }
+    private onMouseMoveForDraw(point: Point, isMouseDown: boolean): null | EventBase {
         const shape = this.shapeManager.onMouseMoveEvent(point, isMouseDown);
 
         if (shape === null)
@@ -55,5 +55,6 @@ export class Manager {
 
         this.renderManager.renderEvent(event);
         return event;
+
     }
 }

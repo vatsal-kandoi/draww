@@ -21,8 +21,12 @@ export class RenderManager {
         if (context=== null) return;
         this.offscreen_temporary_canvas = context as OffscreenCanvasRenderingContext2D;
     }
-    /** Shape is only rendered on temporary layer */
     public renderShape(shape: ShapeBase): void {
+        if (this.offscreen_canvas === null) return;
+        shape.render(this.offscreen_canvas, this.current_canvas_dimensions, this.current_canvas_dimensions);
+    }
+
+    public renderShapeOnLayer(shape: ShapeBase): void {
         if (this.offscreen_temporary_canvas === null) return;
         shape.render(this.offscreen_temporary_canvas, this.current_canvas_dimensions, this.current_canvas_dimensions);
     }
