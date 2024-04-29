@@ -1,4 +1,4 @@
-import {  IProperties, IPropertiesChange, Point, ShapeTypes } from "../../interfaces";
+import {  IProperties, IPropertiesChange, IThemeChange, Point, ShapeTypes } from "../../interfaces";
 import { EventBase } from "../events/base";
 import { EventManager } from "./events";
 import { RenderManager } from "./render";
@@ -54,5 +54,9 @@ export class Manager {
 
     public onPropertiesChange(properties: IPropertiesChange) {
         this.shapeManager.onPropertiesChange(properties);
+    }
+
+    public onThemeChange(properties: IThemeChange) {
+        this.renderManager.onSelectionColorChange(properties.select_color);
     }
 }

@@ -19,7 +19,7 @@ export interface IEventBase {
 
     isEqual: (other: IEventBase) => boolean;
     render: (context: OffscreenCanvasRenderingContext2D) => void;
-    select: (context: OffscreenCanvasRenderingContext2D) => void;
+    select: (context: OffscreenCanvasRenderingContext2D, color: string) => void;
     exportToJson: () => EventJSONBase;
     containsPoint: (point: Point) => boolean;
     shift: (from_point: Point, to_point: Point) => void;

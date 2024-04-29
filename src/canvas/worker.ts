@@ -1,4 +1,4 @@
-import { IInitCanvas, IMouseMoveEvent, IInitUser, UserAction, IShapeChange, INewEvent, IInitTemporaryCanvas, IPropertiesChange } from "../interfaces";
+import { IInitCanvas, IMouseMoveEvent, IInitUser, UserAction, IShapeChange, INewEvent, IInitTemporaryCanvas, IPropertiesChange, IThemeChange } from "../interfaces";
 import { Manager } from "./managers";
 
 const manager = new Manager();
@@ -45,6 +45,9 @@ onmessage = (e: MessageEvent ) => {
         case UserAction.PROPERTIES_CHANGE: {
             manager.onPropertiesChange((data as IPropertiesChange));
             break;
+        }
+        case UserAction.THEME_CHANGE: {
+            manager.onThemeChange((data as IThemeChange));
         }
     }
 };
