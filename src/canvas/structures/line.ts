@@ -1,5 +1,6 @@
 import { ILine, LineJSON, Point } from "../../interfaces";
 import { normalizeCoordinates } from "../utils";
+import shift from "../utils/shift";
 import { ShapeBase } from "./base";
 
 export class Line extends ShapeBase implements ILine {
@@ -23,22 +24,15 @@ export class Line extends ShapeBase implements ILine {
         context.stroke();                   
     }    
 
+    public shift (from_point: Point, to_point: Point) {
+        this.from_point = shift(this.from_point, from_point, to_point);
+        this.to_point = shift(this.to_point, from_point, to_point);
+    }
+
     public exportToJson(): LineJSON {
         return {
             from_point: this.from_point,
             to_point: this.to_point,
         }
     }
-}
-
-export default function captureLine(
-    current_position: Point, 
-    previous_position: Point, 
-    context: OffscreenCanvasRenderingContext2D, 
-    capture_canvas_dimensions: Point,
-    current_canvas_dimensions: Point,
-): LineJSON {
-    const line = new Line(previous_position, current_position);
-    line.render(context, capture_canvas_dimensions, current_canvas_dimensions);
-    return line;
 }

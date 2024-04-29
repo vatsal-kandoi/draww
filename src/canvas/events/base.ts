@@ -52,6 +52,14 @@ export class EventBase implements IEventBase {
         throw new Error("Not implemented");
     }
 
+    public containsPoint(point: Point): boolean {
+        throw new Error("Not implemented");
+    }
+
+    public shift(from_point: Point, to_point: Point) {
+        throw new Error("Not implemented");
+    }
+
     /**
      * Export the event as a JSON object
      */

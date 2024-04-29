@@ -1,4 +1,4 @@
-import { EventJSONBase, IInitCanvas, IInitUser, IMouseMoveEvent, INewEvent, IShapeChange, Point, ShapeTypes, UserAction } from "../interfaces";
+import { EventJSONBase, IInitCanvas, IInitTemporaryCanvas, IInitUser, IMouseMoveEvent, INewEvent, IShapeChange, Point, ShapeTypes, UserAction } from "../interfaces";
 
 export function setupCanvasRenderer(): CanvasManagerInterface {
     const worker: Worker = new Worker(
@@ -40,6 +40,16 @@ export class CanvasManagerInterface {
         }
     }
 
+    public initialiseTemporaryCanvas(canvas: OffscreenCanvas, dimensions: Point ): void {
+        if (window.Worker) {
+            this.worker.postMessage({
+                action: UserAction.INIT_TEMPORARY_CANVAS,
+                canvas: canvas,
+                dimensions: dimensions,
+            } as IInitTemporaryCanvas, [canvas]);
+        }
+    }
+    
     public sendShapeSelectionChange(shape: ShapeTypes): void {
         if (window.Worker) {
             this.worker.postMessage({

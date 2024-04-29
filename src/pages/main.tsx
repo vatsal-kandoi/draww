@@ -29,9 +29,9 @@ const Main: React.FC<{
 
     return (
         <>
-            <ShapeOptions onShapeSelectionChange={onShapeSelectionChange} />
             <Canvas ref={canvasRef}/>  
-        </>
+            <ShapeOptions onShapeSelectionChange={onShapeSelectionChange} />
+       </>
     );
 }
 
