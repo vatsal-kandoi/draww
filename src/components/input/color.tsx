@@ -3,7 +3,6 @@ import { Stack, Tooltip } from "@mui/material";
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
-import { useLanguageStore } from "../../hooks/languageprovider";
 
 
 const ColorPickerButton = styled(Button)(({ theme }) => ({
@@ -14,8 +13,7 @@ const ColorPickerButton = styled(Button)(({ theme }) => ({
     marginRight: theme.spacing(2),
 }));
 
-const ColorPicker: React.FC<{defaultColor: string, onSelectionChange: any}> = (props) => {
-    const i18n = useLanguageStore();
+const ColorPicker: React.FC<{defaultColor: string, onSelectionChange: (color: string) => void}> = (props) => {
     const [value, onValueChange] = React.useState<string>(props.defaultColor);
     const colorPickerInputRef = React.useRef<HTMLInputElement>(null);
         
@@ -40,15 +38,15 @@ const ColorPicker: React.FC<{defaultColor: string, onSelectionChange: any}> = (p
                     style={{opacity: 0, width: 0, height: 0}}
                     aria-hidden={true}
                     ref={colorPickerInputRef} />
-            <Tooltip title={i18n.t("aria_buttons_color_picker")}>
+            <Tooltip title={"Select color"}>
                 <ColorPickerButton onClick={openColorPicker}
-                        aria-label={i18n.t("aria_buttons_color_picker")} 
+                        aria-label={"Select color"} 
                         style={{backgroundColor: value}}/>
             </Tooltip>
             <TextField id="input-field-color" 
                     label="Color" 
                     variant="standard"
-                    aria-label={i18n.t("aria_inputs_color_picker")} 
+                    aria-label={"Select color"} 
                     value={value} onChange={(event) => {onValueChange(event.target.value)}}/>
         </Stack>
     );
