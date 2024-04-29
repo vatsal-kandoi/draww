@@ -11,4 +11,5 @@ export interface IShapeJSONBase {}
 export enum ShapeTypes {
     NONE = "NONE",
     LINE = "LINE",
+    SQUARE = "SQUARE",
 }

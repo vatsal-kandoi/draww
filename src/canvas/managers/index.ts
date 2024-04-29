@@ -48,13 +48,7 @@ export class Manager {
         if (shape === null)
             return null;
 
-        this.renderManager.clearLayer();
         const event = this.eventManager.createEvent(this.shapeManager.active_shape, shape)
-
-        if (event === null) return null;
-
-        this.renderManager.renderEvent(event);
         return event;
-
     }
 }

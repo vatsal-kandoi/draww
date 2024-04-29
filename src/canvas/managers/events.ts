@@ -1,8 +1,10 @@
 import { Point, ShapeTypes } from "../../interfaces";
 import { EventBase } from "../events/base";
 import { PenEvent } from "../events/pen";
+import { SquareEvent } from "../events/square";
 import { ShapeBase } from "../structures/base";
 import { Line } from "../structures/line";
+import { Square } from "../structures/square";
 
 const DEFAULT_POINT: Point = { x: -1, y: -1 };
 
@@ -45,6 +47,11 @@ export class EventManager {
         switch (shapeType) {
             case ShapeTypes.LINE: {
                 const event = new PenEvent(this.current_canvas_dimensions, this.current_canvas_dimensions, this.user_name, shape as Line[]);
+                this.events.push(event);
+                return event;
+            }
+            case ShapeTypes.SQUARE: {
+                const event = new SquareEvent(this.current_canvas_dimensions, this.current_canvas_dimensions, this.user_name, shape as Square);
                 this.events.push(event);
                 return event;
             }

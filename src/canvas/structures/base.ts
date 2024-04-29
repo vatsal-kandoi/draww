@@ -8,7 +8,7 @@ export class ShapeBase implements IShapeBase {
         throw new Error("Not implemented");
     }
 
-    public shift (from_point: Point, to_point: Point) {
+    public shift(from_point: Point, to_point: Point) {
         throw new Error("Not implemented");
     }    
 }

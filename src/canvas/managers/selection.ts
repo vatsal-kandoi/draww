@@ -91,6 +91,7 @@ export class SelectionManager {
         if (isMouseDown) {
             // Select event
             const event = this.eventManager.getEventAgainstPoint(point);
+            console.log(event);
             if (event !== null) this.selectEvent(event, point);
             else this.deselectEvent();
 
