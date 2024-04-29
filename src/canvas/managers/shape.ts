@@ -106,10 +106,11 @@ export class ShapeManager {
             return null;
         }
         const shape = (this.shape !== null) ? this.shape : null;
-
         this.reset();
-        this.renderManager.renderShape(shape);
 
+        if (shape === null) return null;
+
+        this.renderManager.renderShape(shape);
         return shape;
     }
 }

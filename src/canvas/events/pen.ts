@@ -46,7 +46,7 @@ export class PenEvent extends EventBase implements IPenEvent {
         return (point.x >= from_point.x && point.y >= from_point.y && point.x <= to_point.x && point.y <= to_point.y);
     }
 
-    public select(contextAPI: OffscreenCanvasRenderingContext2D) {        
+    public select(contextAPI: OffscreenCanvasRenderingContext2D, color: string) {        
         const {from_point, to_point} = this.getBoundingRect();
 
         const fromCoords = normalizeCoordinates(from_point, this.current_canvas_dimensions, this.capture_canvas_dimensions);
@@ -60,7 +60,7 @@ export class PenEvent extends EventBase implements IPenEvent {
         this.render(contextAPI);
 
         contextAPI.setLineDash([6]);
-        contextAPI.strokeStyle = "#000";
+        contextAPI.strokeStyle = color;
         contextAPI.strokeRect(
             fromCoords.x, 
             fromCoords.y, 

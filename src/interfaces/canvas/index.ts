@@ -6,4 +6,4 @@ export * from "./events/pen";
 export * from "./events/square";
 export * from "./shapes/line";
 export * from "./shapes/square";
-
+export * from "./actions/modes";

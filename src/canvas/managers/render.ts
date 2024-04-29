@@ -8,6 +8,12 @@ export class RenderManager {
     public offscreen_temporary_canvas: OffscreenCanvasRenderingContext2D | null = null;
     private offscreen_canvas: OffscreenCanvasRenderingContext2D | null = null;
     public current_canvas_dimensions: Point = DEFAULT_POINT;    
+    private selection_color: string = "e6e6e6";
+
+
+    public onSelectionColorChange(color: string) {
+        this.selection_color = color;
+    }
 
     public initialiseCanvas(canvas: OffscreenCanvas, dimensions: Point) {
         const context = canvas.getContext("2d") 
@@ -33,7 +39,7 @@ export class RenderManager {
 
     public selectEvent(event: EventBase): void {
         if (this.offscreen_temporary_canvas === null) return;
-        event.select(this.offscreen_temporary_canvas);
+        event.select(this.offscreen_temporary_canvas, this.selection_color);
     }
 
     public renderEvent(event: EventBase): void {

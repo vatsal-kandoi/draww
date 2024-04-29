@@ -1,13 +1,14 @@
 import * as React from "react";
 import { CanvasManagerInterface, setupCanvasRenderer } from "../../canvas/api";
 import CanvasRaw from "./base";
-import { EventJSONBase, IProperties, ShapeTypes } from "../../interfaces";
+import { EventJSONBase, IProperties, IThemeProperties, ShapeTypes } from "../../interfaces";
 
 export interface ICanvasRefs {
     workerAPI: CanvasManagerInterface;    
     sendShapeSelectionChange: (shape: ShapeTypes) => void;
     setupNewEventListener: (cb: (event: EventJSONBase) => void) => void;
     sendPropertiesChange: (properties: IProperties) => void;
+    sendThemeChange: (themeProperties: IThemeProperties) => void;
 }
 
 const Canvas = React.forwardRef<ICanvasRefs, {}>((props, refs) => {
@@ -49,6 +50,9 @@ const Canvas = React.forwardRef<ICanvasRefs, {}>((props, refs) => {
         },
         sendPropertiesChange: (properties: IProperties) => {
             api.sendPropertiesChange(properties);
+        },
+        sendThemeChange: (properties: IThemeProperties) => {
+            api.onThemeChange(properties);
         }
     }));
 

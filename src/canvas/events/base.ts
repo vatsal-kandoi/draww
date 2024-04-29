@@ -48,7 +48,7 @@ export class EventBase implements IEventBase {
         throw new Error("Not implemented");
     }
 
-    public select(contextAPI: OffscreenCanvasRenderingContext2D) {
+    public select(contextAPI: OffscreenCanvasRenderingContext2D, color: string) {
         throw new Error("Not implemented");
     }
 

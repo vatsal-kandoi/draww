@@ -15,11 +15,11 @@ export class SelectionManager {
     private active_event: EventBase | null = null;
     private is_mouse_down: boolean = false;
 
-
     constructor(eventManager: EventManager, renderManager: RenderManager) {
         this.renderManager = renderManager;
         this.eventManager = eventManager;
     }
+
 
     public reset(): void {
         this.last_coordinates = DEFAULT_POINT;
@@ -92,7 +92,6 @@ export class SelectionManager {
         if (isMouseDown) {
             // Select event
             const event = this.eventManager.getEventAgainstPoint(point);
-            console.log(event);
             if (event !== null) this.selectEvent(event, point);
             else this.deselectEvent();
 

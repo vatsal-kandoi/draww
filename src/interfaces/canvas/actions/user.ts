@@ -11,11 +11,20 @@ export enum UserAction {
     LOAD_EVENTS = "LOAD_EVENTS",
     DELETE_ALL_EVENTS = "DELETE_ALL_EVENTS",
     NEW_EVENT_ADDED = "NEW_EVENT_ADDED",
-    PROPERTIES_CHANGE = "PROPERTIES_CHANGE"
+    PROPERTIES_CHANGE = "PROPERTIES_CHANGE",
+    THEME_CHANGE = "THEME_CHANGE",
 }
 
 export interface IProperties {
     borderColor: string;
+}
+
+export interface IThemeProperties {
+    select_color: string;
+}
+
+export interface IThemeChange extends IThemeProperties {
+    action: UserAction;
 }
 
 export interface IPropertiesChange extends IProperties {
