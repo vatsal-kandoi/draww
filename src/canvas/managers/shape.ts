@@ -1,4 +1,4 @@
-import { Point, ShapeTypes } from "../../interfaces";
+import { IProperties, IPropertiesChange, Point, ShapeTypes } from "../../interfaces";
 import { ShapeBase } from "../structures/base";
 import { Line } from "../structures/line";
 import { RenderManager } from "./render";
@@ -14,9 +14,16 @@ export class ShapeManager {
     private start_coordinates: Point = DEFAULT_POINT;
     private last_coordinates: Point = DEFAULT_POINT;
     private is_mouse_down: boolean = false;
+    private properties: IProperties = {
+        borderColor: "#000",
+    };
 
     constructor(renderManager: RenderManager) {
         this.renderManager = renderManager;
+    }
+
+    onPropertiesChange(properties: IPropertiesChange) {
+        this.properties = properties;
     }
 
     public reset(): void {
@@ -61,7 +68,7 @@ export class ShapeManager {
         }
         
         if (isMouseDown) {
-            const line = new Line(this.last_coordinates, point);
+            const line = new Line(this.last_coordinates, point, this.properties.borderColor);
                 
             if (this.shape === null)    
                 this.shape = [];
@@ -75,7 +82,7 @@ export class ShapeManager {
         const shape = (this.shape !== null) ? this.shape : null;
 
         this.reset();
-        (shape as Line[]).forEach((line) => this.renderManager.renderShape(line));
+        (shape as Line[])?.forEach((line) => this.renderManager.renderShape(line));
 
         return shape;
     }
@@ -91,7 +98,7 @@ export class ShapeManager {
         
         if (isMouseDown) {
             this.renderManager.clearLayer();
-            const square = new Square(this.start_coordinates, point);
+            const square = new Square(this.start_coordinates, point, this.properties.borderColor);
                 
             this.shape = square;
             this.renderManager.renderShapeOnLayer(square);

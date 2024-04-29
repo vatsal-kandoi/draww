@@ -1,4 +1,4 @@
-import {  Point, ShapeTypes } from "../../interfaces";
+import {  IProperties, IPropertiesChange, Point, ShapeTypes } from "../../interfaces";
 import { EventBase } from "../events/base";
 import { EventManager } from "./events";
 import { RenderManager } from "./render";
@@ -50,5 +50,9 @@ export class Manager {
 
         const event = this.eventManager.createEvent(this.shapeManager.active_shape, shape)
         return event;
+    }
+
+    public onPropertiesChange(properties: IPropertiesChange) {
+        this.shapeManager.onPropertiesChange(properties);
     }
 }

@@ -6,7 +6,8 @@ export interface IShapeBase {
     shift: (from_point: Point, to_point: Point) => void;
 }
 
-export interface IShapeJSONBase {}
+export interface IShapeJSONBase {
+}
 
 export enum ShapeTypes {
     NONE = "NONE",

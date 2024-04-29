@@ -59,6 +59,7 @@ export class PenEvent extends EventBase implements IPenEvent {
 
         this.render(contextAPI);
 
+        contextAPI.setLineDash([6]);
         contextAPI.strokeStyle = "#000";
         contextAPI.strokeRect(
             fromCoords.x, 
@@ -66,6 +67,7 @@ export class PenEvent extends EventBase implements IPenEvent {
             (toCoords.x - fromCoords.x),
             (toCoords.y - fromCoords.y)
         ); 
+        contextAPI.setLineDash([0]);
     }
 
     public shift (from_point: Point, to_point: Point) {

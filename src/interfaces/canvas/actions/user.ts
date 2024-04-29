@@ -11,6 +11,15 @@ export enum UserAction {
     LOAD_EVENTS = "LOAD_EVENTS",
     DELETE_ALL_EVENTS = "DELETE_ALL_EVENTS",
     NEW_EVENT_ADDED = "NEW_EVENT_ADDED",
+    PROPERTIES_CHANGE = "PROPERTIES_CHANGE"
+}
+
+export interface IProperties {
+    borderColor: string;
+}
+
+export interface IPropertiesChange extends IProperties {
+    action: UserAction;
 }
 
 export interface IShapeChange {

@@ -1,4 +1,4 @@
-import { EventJSONBase, IInitCanvas, IInitTemporaryCanvas, IInitUser, IMouseMoveEvent, INewEvent, IShapeChange, Point, ShapeTypes, UserAction } from "../interfaces";
+import { EventJSONBase, IInitCanvas, IInitTemporaryCanvas, IInitUser, IMouseMoveEvent, INewEvent, IProperties, IPropertiesChange, IShapeChange, Point, ShapeTypes, UserAction } from "../interfaces";
 
 export function setupCanvasRenderer(): CanvasManagerInterface {
     const worker: Worker = new Worker(
@@ -74,6 +74,15 @@ export class CanvasManagerInterface {
             this.worker.onmessage = (ev: MessageEvent) => {
                 cb((ev.data as INewEvent).event);
             };
+        }
+    }
+
+    public sendPropertiesChange(properties: IProperties) {
+        if (window.Worker) {
+            this.worker.postMessage({
+                action: UserAction.PROPERTIES_CHANGE,
+                ...properties
+            } as IPropertiesChange);
         }
     }
 }

@@ -6,11 +6,13 @@ import { ShapeBase } from "./base";
 export class Line extends ShapeBase implements ILine {
     from_point: Point;
     to_point: Point; 
+    border_color: string;
 
-    constructor(from_point: Point, to_point: Point) {
+    constructor(from_point: Point, to_point: Point, border_color: string) {
         super();
         this.from_point = from_point;
         this.to_point = to_point;
+        this.border_color = border_color;
     }
 
     public render(context: OffscreenCanvasRenderingContext2D, capture_canvas_dimensions: Point, current_canvas_dimensions: Point): void {
@@ -18,6 +20,7 @@ export class Line extends ShapeBase implements ILine {
         const toCoords = normalizeCoordinates(this.to_point, current_canvas_dimensions, capture_canvas_dimensions);        
 
         context.beginPath();
+        context.strokeStyle = this.border_color;
         context.moveTo(fromCoords.x, fromCoords.y);
         context.lineTo(toCoords.x, toCoords.y);
         context.closePath();
@@ -33,6 +36,7 @@ export class Line extends ShapeBase implements ILine {
         return {
             from_point: this.from_point,
             to_point: this.to_point,
+            border_color: this.border_color,
         }
     }
 }

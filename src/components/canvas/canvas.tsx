@@ -1,12 +1,13 @@
 import * as React from "react";
 import { CanvasManagerInterface, setupCanvasRenderer } from "../../canvas/api";
 import CanvasRaw from "./base";
-import { EventJSONBase, ShapeTypes } from "../../interfaces";
+import { EventJSONBase, IProperties, ShapeTypes } from "../../interfaces";
 
 export interface ICanvasRefs {
     workerAPI: CanvasManagerInterface;    
     sendShapeSelectionChange: (shape: ShapeTypes) => void;
     setupNewEventListener: (cb: (event: EventJSONBase) => void) => void;
+    sendPropertiesChange: (properties: IProperties) => void;
 }
 
 const Canvas = React.forwardRef<ICanvasRefs, {}>((props, refs) => {
@@ -36,7 +37,7 @@ const Canvas = React.forwardRef<ICanvasRefs, {}>((props, refs) => {
             document.removeEventListener("mousemove", mouseMoveEvent);
             document.removeEventListener("mousedown", mouseDownEvent);
         };
-    }, [api, mouseMoveEvent]);
+    }, [api, mouseMoveEvent, mouseDownEvent]);
 
     React.useImperativeHandle(refs, () => ({
         workerAPI: api,
@@ -45,6 +46,9 @@ const Canvas = React.forwardRef<ICanvasRefs, {}>((props, refs) => {
         },
         setupNewEventListener: (cb: (event: EventJSONBase) => void): void => {
             api.setupNewEventListener(cb);
+        },
+        sendPropertiesChange: (properties: IProperties) => {
+            api.sendPropertiesChange(properties);
         }
     }));
 

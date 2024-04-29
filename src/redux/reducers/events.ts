@@ -1,4 +1,4 @@
-import { ShapeTypes, EventJSONBase, UserAction } from "../../interfaces";
+import { EventJSONBase, UserAction } from "../../interfaces";
 
 const initialState = {
     events: []

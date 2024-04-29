@@ -1,4 +1,4 @@
-import { IInitCanvas, IMouseMoveEvent, IInitUser, UserAction, IShapeChange, INewEvent, IInitTemporaryCanvas } from "../interfaces";
+import { IInitCanvas, IMouseMoveEvent, IInitUser, UserAction, IShapeChange, INewEvent, IInitTemporaryCanvas, IPropertiesChange } from "../interfaces";
 import { Manager } from "./managers";
 
 const manager = new Manager();
@@ -40,6 +40,10 @@ onmessage = (e: MessageEvent ) => {
                     event: event.exportToJson(),
                 } as INewEvent);
             }
+            break;
+        }
+        case UserAction.PROPERTIES_CHANGE: {
+            manager.onPropertiesChange((data as IPropertiesChange));
             break;
         }
     }

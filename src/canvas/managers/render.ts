@@ -1,4 +1,4 @@
-import { Point } from "../../interfaces";
+import { IProperties, Point } from "../../interfaces";
 import { EventBase } from "../events/base";
 import { ShapeBase } from "../structures/base";
 

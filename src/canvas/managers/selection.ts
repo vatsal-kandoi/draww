@@ -1,4 +1,4 @@
-import { Point, ShapeTypes } from "../../interfaces";
+import { IProperties, Point, ShapeTypes } from "../../interfaces";
 import { EventBase } from "../events/base";
 import abs from "../utils/abs";
 import { EventManager } from "./events";
@@ -14,6 +14,7 @@ export class SelectionManager {
     private last_coordinates: Point = DEFAULT_POINT;
     private active_event: EventBase | null = null;
     private is_mouse_down: boolean = false;
+
 
     constructor(eventManager: EventManager, renderManager: RenderManager) {
         this.renderManager = renderManager;
