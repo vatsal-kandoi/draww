@@ -1,7 +1,9 @@
-import { IShapeBase, IShapeJSONBase, Point } from "../../interfaces";
+import { IShape, IShapeJSON, Point } from "../../../interfaces";
 
-export class ShapeBase implements IShapeBase {
-    public exportToJson(): IShapeJSONBase {
+/** Defines the base class for all shapes available to the user */
+export class ShapeBase implements IShape {
+
+    public exportToJson(): IShapeJSON {
         throw new Error("Not implemented");
     }
     public render(context: OffscreenCanvasRenderingContext2D, capture_canvas_dimensions: Point, current_canvas_dimensions: Point): void {

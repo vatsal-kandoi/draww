@@ -1,7 +1,7 @@
 import { Point } from "../../interfaces";
-import abs from "./abs";
+import abs from "../numeric/abs";
 
-export default function shift(point: Point, from_center: Point, to_center: Point): Point {
+export function shift(point: Point, from_center: Point, to_center: Point): Point {
     const ratio = abs((from_center.y - point.y) / (from_center.x - point.x));
     const distance = Math.sqrt(Math.pow( from_center.y - point.y, 2) +  Math.pow(from_center.x - point.x, 2))
     const c = distance / Math.sqrt( ( Math.pow(ratio, 2) + 1 ))
@@ -14,7 +14,5 @@ export default function shift(point: Point, from_center: Point, to_center: Point
     return {
         x: to_center.x + multiplier.x * c,
         y: to_center.y + multiplier.y * ratio * c
-
-
     }
 }

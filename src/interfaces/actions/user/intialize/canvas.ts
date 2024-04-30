@@ -8,4 +8,7 @@ export interface IUserCanvasActionInitializeCanvas extends IUserCanvasActionBase
     dimensions: Point,
 }
 
-export interface IUserCanvasActionInitializeLayer extends IUserCanvasActionInitializeCanvas {}
+export interface IUserCanvasActionInitializeLayer extends IUserCanvasActionBase {
+    /** Offscren canvas instance of the HTML canvas being sent to the worker */
+    canvas: OffscreenCanvas;
+}

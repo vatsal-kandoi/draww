@@ -1,24 +1,24 @@
-import { EventJSONBase, UserAction } from "../../interfaces";
+import { IUserEventJSON, UserCanvasActionType} from "../../interfaces";
 
 const initialState = {
     events: []
 };
   
 const eventsReducer = (
-        state: { events: EventJSONBase[] }= initialState, 
+        state: { events: IUserEventJSON[] }= initialState, 
         action: {
-            type: UserAction,
-            payload: EventJSONBase | EventJSONBase[],
+            type: UserCanvasActionType,
+            payload: IUserEventJSON | IUserEventJSON[],
         },
     ) => {
     switch(action.type) {
-        case (UserAction.NEW_EVENT_ADDED): {
+        case (UserCanvasActionType.CANVAS_EVENTS_ADDED): {
             return { 
                 ...state, 
                 events: [
                     // Handle event updates due to drags
-                    ...state.events.filter((event) => event.event_name !== (action.payload as EventJSONBase).event_name), 
-                    (action.payload as EventJSONBase) 
+                    ...state.events.filter((event) => event.event_name !== (action.payload as IUserEventJSON).event_name), 
+                    (action.payload as IUserEventJSON) 
                 ]
             };
         }

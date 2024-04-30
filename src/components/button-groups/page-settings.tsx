@@ -10,7 +10,10 @@ const ActionButtonGroupContainer = styled(Paper)(({ theme }) => ({
     paddingBottom: theme.spacing(1),
     paddingLeft: theme.spacing(1),
     paddingRight: theme.spacing(1),
-    width: "100%"
+    position: "absolute",
+    top: theme.spacing(1),
+    right: theme.spacing(3),
+    width: "100px"
 }));
 
 interface IPageActions {

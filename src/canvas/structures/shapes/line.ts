@@ -1,9 +1,9 @@
-import { ISquare, SquareShapeJSON, Point } from "../../interfaces";
-import { normalizeCoordinates } from "../utils";
-import shift from "../utils/shift";
 import { ShapeBase } from "./base";
+import { ILine, ILineJSON, Point } from "../../../interfaces";
+import { normalizeCoordinates, shift } from "../../../utils";
 
-export class Square extends ShapeBase implements ISquare {
+/** Defines the class for line shape available to the user */
+export class Line extends ShapeBase implements ILine {
     from_point: Point;
     to_point: Point; 
     border_color: string;
@@ -17,22 +17,22 @@ export class Square extends ShapeBase implements ISquare {
 
     public render(context: OffscreenCanvasRenderingContext2D, capture_canvas_dimensions: Point, current_canvas_dimensions: Point): void {
         const fromCoords = normalizeCoordinates(this.from_point, current_canvas_dimensions, capture_canvas_dimensions);
-        const toCoords = normalizeCoordinates(this.to_point, current_canvas_dimensions, capture_canvas_dimensions);
+        const toCoords = normalizeCoordinates(this.to_point, current_canvas_dimensions, capture_canvas_dimensions);        
+
+        context.beginPath();
         context.strokeStyle = this.border_color;
-        context.strokeRect(
-            fromCoords.x, 
-            fromCoords.y, 
-            (toCoords.x - fromCoords.x),
-            (toCoords.y - fromCoords.y)
-        );                     
+        context.moveTo(fromCoords.x, fromCoords.y);
+        context.lineTo(toCoords.x, toCoords.y);
+        context.closePath();
+        context.stroke();                   
     }    
 
-    public shift(from_point: Point, to_point: Point) {
+    public shift (from_point: Point, to_point: Point) {
         this.from_point = shift(this.from_point, from_point, to_point);
         this.to_point = shift(this.to_point, from_point, to_point);
     }
 
-    public exportToJson(): SquareShapeJSON {
+    public exportToJson(): ILineJSON {
         return {
             from_point: this.from_point,
             to_point: this.to_point,
@@ -40,4 +40,3 @@ export class Square extends ShapeBase implements ISquare {
         }
     }
 }
-

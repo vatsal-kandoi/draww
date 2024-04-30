@@ -1,10 +1,10 @@
 import * as React from 'react';
 import ThemeProviderContext from "./contexts/themeprovider";
 import { ThemeProvider } from '@mui/material/styles';
-import Main from './views/main';
 import store from './redux/store';
 import { Provider } from 'react-redux';
 import useThemeProvider from './hooks/themeprovider';
+import Home from "./views/home"
 
 const App: React.FC<{}> = () => {
   const {themeContextValue, theme} = useThemeProvider();
@@ -14,7 +14,7 @@ const App: React.FC<{}> = () => {
     <Provider store={store}>
       <ThemeProviderContext.Provider value={themeContextValue}>
             <ThemeProvider theme={theme}>
-              <Main />
+              <Home />
             </ThemeProvider>
         </ThemeProviderContext.Provider>
     </Provider>
