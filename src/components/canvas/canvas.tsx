@@ -1,76 +1,90 @@
 import * as React from "react";
-import { CanvasManagerInterface, setupCanvasRenderer } from "../../canvas/api";
-import CanvasRaw from "./base";
-import { EventJSONBase, IProperties, IThemeProperties, ShapeTypes } from "../../interfaces";
+import { setupCanvasRenderer, CanvasInterface } from "../../canvas/api";
+import CanvasBase from "./base";
+import { ICanvasUserEventProperties, IUserCanvasActionEventAdded, Point, Shapes } from "../../interfaces";
+import { Palette } from "@mui/material";
 
 export interface ICanvasRefs {
-    workerAPI: CanvasManagerInterface;    
-    sendShapeSelectionChange: (shape: ShapeTypes) => void;
-    setupNewEventListener: (cb: (event: EventJSONBase) => void) => void;
-    sendPropertiesChange: (properties: IProperties) => void;
-    sendThemeChange: (themeProperties: IThemeProperties) => void;
+    /** Initialize the worker on the thread */
+    initializeUser: (user_name: string) => void;  
+    /** Send the change in drawing propties to the worker */
+    onCanvasDrawingPropertiesChange: (properties: ICanvasUserEventProperties) => void;
+    /** Send the change in selected shape to the worker */
+    onCanvasSelectedShapeChange: (shape: Shapes) => void;
+    /** Send the current location to the worker */
+    onMouseMovementOnCanvas: (point: Point, is_mouse_down: boolean) => void;
+    /*** Send theme based properties such as select outline color to the worker  */
+    onCanvasThemeBasedPropertiesChange: (palette: Palette) => void;
+    /** Srt-up a callback to be called whenever a new event is added to the canvas */
+    setupCanvasUserEventAddListener: (cb: (data: IUserCanvasActionEventAdded) => void) => void;
 }
 
 const Canvas = React.forwardRef<ICanvasRefs, {}>((props, refs) => {
-    const api: CanvasManagerInterface = React.useMemo(() => {
+    const api: CanvasInterface = React.useMemo(() => {
         return setupCanvasRenderer();
     }, []);
 
-    const mouseMoveEvent = React.useCallback((mouseMoveEvt: MouseEvent) => {
-        const isPressed = mouseMoveEvt.buttons !== 0 && mouseMoveEvt.button === 0;
-        const x = mouseMoveEvt.clientX;
-        const y = mouseMoveEvt.clientY;
-        api.sendMouseCoordinates({ x, y }, isPressed);
-    }, [api]);
-
-    const mouseDownEvent = React.useCallback((mouseMoveEvt: MouseEvent) => {
-        const x = mouseMoveEvt.clientX;
-        const y = mouseMoveEvt.clientY;
-        api.sendMouseCoordinates({ x, y }, true);
-    }, [api]);
-
-    React.useEffect(() => {
-        document.addEventListener("mousemove", mouseMoveEvent);
-        document.addEventListener("mousedown", mouseDownEvent);
-        
-        return () => {
-            api.cleanup();
-            document.removeEventListener("mousemove", mouseMoveEvent);
-            document.removeEventListener("mousedown", mouseDownEvent);
-        };
-    }, [api, mouseMoveEvent, mouseDownEvent]);
-
     React.useImperativeHandle(refs, () => ({
-        workerAPI: api,
-        sendShapeSelectionChange: (shape: ShapeTypes) => {
-            api.sendShapeSelectionChange(shape);
+        /**
+         * Initiliase the user on the remote worker
+         * @param user_name 
+         */
+        initializeUser: (user_name: string) => {
+            api.initializeUser(user_name)
         },
-        setupNewEventListener: (cb: (event: EventJSONBase) => void): void => {
-            api.setupNewEventListener(cb);
+
+        /**
+         * Send the change in drawing propties to the worker
+         * @param properties Drawing properties chosen by user
+         */
+        onCanvasDrawingPropertiesChange: (properties: ICanvasUserEventProperties) => {
+            api.onCanvasDrawingPropertiesChange(properties);
         },
-        sendPropertiesChange: (properties: IProperties) => {
-            api.sendPropertiesChange(properties);
+        /**
+         * Send the change in selected shape to the worker
+         * @param shape Select shape
+         */
+        onCanvasSelectedShapeChange: (shape: Shapes) => {
+            api.onCanvasSelectedShapeChange(shape);
         },
-        sendThemeChange: (properties: IThemeProperties) => {
-            api.onThemeChange(properties);
+        /**
+         * Send the current location to the worker
+         * @param point Current location
+         * @param is_mouse_down whether the mouse is pressed or not
+         */
+        onMouseMovementOnCanvas: (point: Point, is_mouse_down: boolean) => {
+            api.onMouseMovementOnCanvas(point, is_mouse_down);
+        },
+
+        /**
+         * Send theme based properties such as select outline color to the worker
+         * @param properties Drawing properties chosen by user
+         */
+        onCanvasThemeBasedPropertiesChange: (palette: Palette) => {
+            api.onCanvasThemeBasedPropertiesChange(palette);
+        },
+
+        /**
+         * Srt-up a callback to be called whenever a new event is added to the canvas
+         * @param cb Callback to be called when a new event is added 
+         */
+        setupCanvasUserEventAddListener: (cb: (data: IUserCanvasActionEventAdded) => void) => {
+            api.setupCanvasUserEventAddListener(cb)
         }
     }));
 
     const onCanvasMount = React.useCallback((canvas: HTMLCanvasElement) => {
-        const offscreen  = canvas.transferControlToOffscreen();
-        api.initialiseCanvas(offscreen, {x: canvas.width, y: canvas.height});
+        api.initializeCanvas(canvas, {x: canvas.width, y: canvas.height});
     }, [api]);
 
-    const onTemporaryCanvasMount = React.useCallback((canvas: HTMLCanvasElement) => {
-        const offscreen  = canvas.transferControlToOffscreen();
-        api.initialiseTemporaryCanvas(offscreen, {x: canvas.width, y: canvas.height});
+    const onLayerMount = React.useCallback((canvas: HTMLCanvasElement) => {
+        api.initializeLayer(canvas);
     }, [api]);
 
     return (
         <>
-            <CanvasRaw 
-                onCanvasMount={onCanvasMount} 
-                onTemporaryCanvasMount={onTemporaryCanvasMount}/> 
+            <CanvasBase onCanvasMount={onCanvasMount}
+                    onLayerMount={onLayerMount} />
         </>
     );
 });

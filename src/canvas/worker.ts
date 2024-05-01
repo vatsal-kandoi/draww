@@ -1,53 +1,45 @@
-import { IInitCanvas, IMouseMoveEvent, IInitUser, UserAction, IShapeChange, INewEvent, IInitTemporaryCanvas, IPropertiesChange, IThemeChange } from "../interfaces";
-import { Manager } from "./managers";
+import { IUserCanvasActionBase, IUserCanvasActionEventAdded, IUserCanvasActionInitializeCanvas, IUserCanvasActionInitializeLayer, IUserCanvasActionInitializeUser, IUserCanvasActionMouseMovement, IUserCanvasActionPropertiesChange, IUserCanvasActionShapeChange, IUserCanvasActionThemeBasedPropertiesChange, UserCanvasActionType } from "../interfaces"
+import { Manager } from "./manager";
 
 const manager = new Manager();
 
 onmessage = (e: MessageEvent ) => {
-    const data = e.data as { action: UserAction, [key: string]: any };
+    const data = e.data as IUserCanvasActionBase;
 
-    switch (data.action) {
-        case UserAction.INIT_USER: {        
-            manager.onUserInit((data as IInitUser).user_name);
-            break;
-        } 
-        case UserAction.INIT_CANVAS: {
-            manager.onCanvasInit(
-                (data as IInitCanvas).canvas, 
-                (data as IInitCanvas).dimensions
-            );
+    switch (data.type) {
+        case UserCanvasActionType.CANVAS_INITIALIZE_USER: {
+            manager.initializeUser(data as IUserCanvasActionInitializeUser)
             break;
         }
-        case UserAction.INIT_TEMPORARY_CANVAS: {
-            manager.onTemporaryCanvasInit(
-                (data as IInitTemporaryCanvas).canvas, 
-                (data as IInitTemporaryCanvas).dimensions
-            );
+        case UserCanvasActionType.CANVAS_INITIALIZE_MAIN_CANVAS: {
+            manager.initializeCanvas(data as IUserCanvasActionInitializeCanvas)
             break;
         }
-        case UserAction.SHAPE_CHANGE: {
-            manager.onSelectedShapeChange((data as IShapeChange).shape);
+        case UserCanvasActionType.CANVAS_INITIALIZE_TEMPORARY_LAYER: {
+            manager.initializeLayer(data as IUserCanvasActionInitializeLayer)
             break;
         }
-        case UserAction.MOUSE_MOVE_EVENT: {
-            const event = manager.onMouseMoveEvent(
-                (data as IMouseMoveEvent).point,
-                (data as IMouseMoveEvent).isMouseDown
-            );
-            if (event !== null) {
+        case UserCanvasActionType.CANVAS_CHANGE_DRAWING_PROPERTIES: {
+            manager.onCanvasDrawingPropertiesChange(data as IUserCanvasActionPropertiesChange)
+            break;
+        }
+        case UserCanvasActionType.CANVAS_CHANGE_SELECTED_SHAPE: {
+            manager.onCanvasSelectedShapeChange(data as IUserCanvasActionShapeChange)
+            break;
+        }
+        case UserCanvasActionType.CANVAS_CHANGE_MOUSE_POSITION: {
+            const event = manager.onMouseMovementOnCanvas(data as IUserCanvasActionMouseMovement)
+            if (event !== null) 
                 postMessage({
-                    type: UserAction.NEW_EVENT_ADDED,
+                    type: UserCanvasActionType.CANVAS_EVENTS_ADDED,
                     event: event.exportToJson(),
-                } as INewEvent);
-            }
+                } as IUserCanvasActionEventAdded)
+
             break;
         }
-        case UserAction.PROPERTIES_CHANGE: {
-            manager.onPropertiesChange((data as IPropertiesChange));
+        case UserCanvasActionType.CANVAS_CHANGE_THEME_BASED_PROPERTIES: {
+            manager.onCanvasThemeBasedPropertiesChange(data as IUserCanvasActionThemeBasedPropertiesChange);
             break;
-        }
-        case UserAction.THEME_CHANGE: {
-            manager.onThemeChange((data as IThemeChange));
-        }
+        }    
     }
-};
+}

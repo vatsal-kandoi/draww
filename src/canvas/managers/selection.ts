@@ -1,111 +1,111 @@
-import { IProperties, Point, ShapeTypes } from "../../interfaces";
-import { EventBase } from "../events/base";
-import abs from "../utils/abs";
-import { EventManager } from "./events";
-import { RenderManager } from "./render";
-
-const DEFAULT_POINT = { x: -1, y: -1 };
-
+import { DEFAULT_POINT, IUserEvent, Point, Shapes } from "../../interfaces";
+import { Renderer } from "../render";
+import { EventStore } from "../store";
 
 export class SelectionManager {
-    public active_shape: ShapeTypes = ShapeTypes.NONE;
-    public renderManager: RenderManager;
-    public eventManager: EventManager;
-    private last_coordinates: Point = DEFAULT_POINT;
-    private active_event: EventBase | null = null;
-    private is_mouse_down: boolean = false;
 
-    constructor(eventManager: EventManager, renderManager: RenderManager) {
-        this.renderManager = renderManager;
-        this.eventManager = eventManager;
-    }
+    shape: Shapes = Shapes.NONE;
+    active_event: IUserEvent | null = null;
+    is_mouse_down: boolean = false;
+    last_coordinates: Point = DEFAULT_POINT;
 
-
-    public reset(): void {
-        this.last_coordinates = DEFAULT_POINT;
-        if (this.active_event !== null) {
-            this.renderManager.renderEvent(this.active_event);
-        }
-        this.active_event = null;
-        this.renderManager.clearLayer();
-    }
-
+    /** Change whether the selection is enabled or not based on shape type */
     public isEnabled(): boolean {
-        return this.active_shape === ShapeTypes.NONE;
+        return this.shape === Shapes.NONE;
     }
 
-    public onSelectedShapeChange(selected_shape: ShapeTypes) {
-        this.active_shape = selected_shape;
+    /**
+     * Handle changes to the selected shape
+     * @param shape 
+     */
+    public onCanvasSelectedShapeChange(shape: Shapes): void {
+        this.shape = shape;
         this.reset();
     }
 
-    public isShiftingEvent(point: Point): boolean {
-        return this.active_event !== null && this.is_mouse_down;
-    }
-
-    private shiftingShape(point: Point, isMouseDown: boolean): EventBase | null {
-        if (isMouseDown) {
-            if (this.active_event === null) return null;
-            this.active_event.shift(this.last_coordinates, point);
-            this.renderManager.renderEventOnLayer(this.active_event);
-            this.last_coordinates = point;
-            return null;
-        } else {
-            // Compelte shifting
-            if (this.active_event === null) return null;
-            const event = this.active_event;
-            this.eventManager.updateEventAfterMove(event);
-            this.selectEvent(event, point);
-            this.is_mouse_down = false;
-            return event;
-        }
-    }
-
-    private selectEvent(event: EventBase, point: Point) {
-        this.renderManager.clearLayer();
-        this.renderManager.clearCanvas();
-        const remainingEvents = this.eventManager.events.filter((ev) => ev.event_name !== event.event_name);
-        remainingEvents.forEach((ev) => {
-            this.renderManager.renderEvent(ev);
-        });
-
-        this.renderManager.selectEvent(event);
-
-        this.active_event = event;
-        this.last_coordinates = point;
-        this.is_mouse_down = true;        
-    }
-
-    private deselectEvent() {
-        this.renderManager.clearLayer();
-        this.renderManager.clearCanvas();
-        this.eventManager.events.forEach((ev) => {
-            this.renderManager.renderEvent(ev);
-        });
+    public reset(): void {
         this.active_event = null;
         this.last_coordinates = DEFAULT_POINT;
         this.is_mouse_down = false;
+    }
+
+    /**
+     * Handle movements of mouse, and render accordingly
+     * @param point Cursor on point
+     * @param is_mouse_down Whether mouse is clicked
+     */
+    public onMouseMovement(point: Point, is_mouse_down: boolean): IUserEvent | null {
+        if (this.isShiftingEvent(point)) {
+            const event = this.shiftEvent(point, is_mouse_down);
+            return event;
+        }
+        // Try selecting event
+        this.selectEvent(point, is_mouse_down);
         return null;
     }
 
-    private selectingShape(point: Point, isMouseDown: boolean): EventBase | null {
-        if (isMouseDown) {
-            // Select event
-            const event = this.eventManager.getEventAgainstPoint(point);
-            if (event !== null) this.selectEvent(event, point);
-            else this.deselectEvent();
+    private isShiftingEvent(point: Point): boolean {
+        return this.active_event !== null && this.is_mouse_down;
+    }    
 
-            return event;
-        } else {
-            this.is_mouse_down = false;
+    private shiftEvent(point: Point, is_mouse_down: boolean): IUserEvent | null {
+        if (this.active_event === null) return null;
+
+        const renderer = Renderer.getInstance()
+        if (is_mouse_down) {
+            // Conitnue shifting
+            console.log(point, is_mouse_down);
+            this.active_event?.shift(this.last_coordinates, point);
+            console.log(this.active_event)
+            renderer.shift(this.active_event);
+            this.last_coordinates = point;
+            
             return null;
+        } else {
+            // Complete shifting
+            const event = this.active_event;
+            this.is_mouse_down = false;
+            this.last_coordinates = DEFAULT_POINT;
+            renderer.select(event);
+            return event;
+        }
+    }
+    private selectEvent(point: Point, is_mouse_down: boolean) {
+        if (is_mouse_down) {
+            const event = this.getEventAgainstPoint(point);
+            const renderer = Renderer.getInstance();
+
+            // Remove selection
+            if (event === null) {
+                this.active_event = null;
+                this.last_coordinates = DEFAULT_POINT;
+                this.is_mouse_down = false;
+                renderer.pushObjectsOntoCanvas();
+            }
+            else if (this.active_event === null || !this.active_event.isEqual(event)) {                
+                this.active_event = event;
+                renderer.select(this.active_event);
+            }   
+
+            this.last_coordinates = point;
+            this.is_mouse_down = true;
+        } else {
+            this.active_event = null;
+            this.last_coordinates = DEFAULT_POINT;
+            this.is_mouse_down = false;
         }
     }
 
-
-    public onMouseMoveEvent(point: Point, isMouseDown: boolean): EventBase | null {
-        if (this.isShiftingEvent(point)) return this.shiftingShape(point, isMouseDown);
-        else return this.selectingShape(point, isMouseDown);
+    private getEventAgainstPoint(point: Point): IUserEvent | null {
+        const events = EventStore.getInstance().getAllEvents();
+        console.log(events);
+        let event: IUserEvent | null = null;        
+        for (let idx = events.length - 1; idx >= 0; idx-- ) {
+            if (events[idx].containsPoint(point)) {
+                event = events[idx];
+                break;
+            }
+        }
+        return event;
     }
-    
 }

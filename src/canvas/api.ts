@@ -1,97 +1,141 @@
-import { EventJSONBase, IInitCanvas, IInitTemporaryCanvas, IInitUser, IMouseMoveEvent, INewEvent, IProperties, IPropertiesChange, IShapeChange, IThemeProperties, Point, ShapeTypes, UserAction } from "../interfaces";
+import { Palette } from "@mui/material";
+import { ICanvasUserEventProperties, IUserCanvasActionEventAdded, Point, Shapes, UserCanvasActionType, IUserCanvasActionInitializeUser, IUserCanvasActionInitializeCanvas, IUserCanvasActionInitializeLayer, IUserCanvasActionPropertiesChange, IUserCanvasActionShapeChange, IUserCanvasActionMouseMovement, IUserCanvasActionThemeBasedPropertiesChange } from "../interfaces";
 
-export function setupCanvasRenderer(): CanvasManagerInterface {
+export function setupCanvasRenderer(): CanvasInterface {
     const worker: Worker = new Worker(
         new URL(`./worker.ts`, import.meta.url)
     )
-    const api = new CanvasManagerInterface(worker);
+    const api = new CanvasInterface(worker);
     return api;
 }
 
-export class CanvasManagerInterface {
-
-    worker: Worker
+export class CanvasInterface {
+    
+    /** 
+     * Web worker to postMessage to & set-up message handlers
+     */
+    worker: Worker;
 
     constructor(worker: Worker) {
         this.worker = worker;
     }
 
+    /**
+     * Terminate the web workers on component unmount
+     */
     public cleanup() {
         this.worker.terminate();
-
     }
 
-    public initialiseUser(user_name: string): void {
+    /**
+     * Initiliase the user on the remote worker
+     * @param user_name 
+     */
+    public initializeUser(user_name: string) {
         if (window.Worker) {
             this.worker.postMessage({
-                action: UserAction.INIT_USER,
+                type: UserCanvasActionType.CANVAS_INITIALIZE_USER,
                 user_name: user_name,
-            } as IInitUser)
+            } as IUserCanvasActionInitializeUser)
         }
     }
 
-    public initialiseCanvas(canvas: OffscreenCanvas, dimensions: Point ): void {
+    /**
+     * Initialize the main canvas on the remote worker by transferring control off scren
+     * @param canvas HTML Canvas
+     * @param dimensions Dimensions for the canvas
+     */
+    public initializeCanvas(canvas: HTMLCanvasElement, dimensions: Point) {
         if (window.Worker) {
+            const offscreen = canvas.transferControlToOffscreen();
             this.worker.postMessage({
-                action: UserAction.INIT_CANVAS,
-                canvas: canvas,
+                type: UserCanvasActionType.CANVAS_INITIALIZE_MAIN_CANVAS,
                 dimensions: dimensions,
-            } as IInitCanvas, [canvas]);
+                canvas: offscreen,
+            } as IUserCanvasActionInitializeCanvas, [offscreen])
+
         }
     }
 
-    public initialiseTemporaryCanvas(canvas: OffscreenCanvas, dimensions: Point ): void {
+    /**
+     * Initialize the layer for rendering temporary content such as moves. Dimension remain same as main canvas
+     * @param canvas HTML Canvas
+     */
+    public initializeLayer(canvas: HTMLCanvasElement) {
         if (window.Worker) {
+            const offscreen = canvas.transferControlToOffscreen();
             this.worker.postMessage({
-                action: UserAction.INIT_TEMPORARY_CANVAS,
-                canvas: canvas,
-                dimensions: dimensions,
-            } as IInitTemporaryCanvas, [canvas]);
-        }
-    }
-    
-    public sendShapeSelectionChange(shape: ShapeTypes): void {
-        if (window.Worker) {
-            this.worker.postMessage({
-                action: UserAction.SHAPE_CHANGE,
-                shape: shape,
-            } as IShapeChange)
+                type: UserCanvasActionType.CANVAS_INITIALIZE_TEMPORARY_LAYER,
+                canvas: offscreen,
+            } as IUserCanvasActionInitializeLayer, [offscreen])
         }
     }
 
-    public sendMouseCoordinates(point: Point, isMouseDown: boolean) {
+
+    /**
+     * Send the change in drawing propties to the worker
+     * @param properties Drawing properties chosen by user
+     */
+    public onCanvasDrawingPropertiesChange(properties: ICanvasUserEventProperties): void {
         if (window.Worker) {
             this.worker.postMessage({
-                action: UserAction.MOUSE_MOVE_EVENT,
-                point: point,
-                isMouseDown: isMouseDown
-            } as IMouseMoveEvent);
+                type: UserCanvasActionType.CANVAS_CHANGE_DRAWING_PROPERTIES,
+                properties,
+            } as IUserCanvasActionPropertiesChange)
         }
     }
 
-    public setupNewEventListener(cb: (eventJSON: EventJSONBase) => void) {
+    /**
+     * Send the change in selected shape to the worker
+     * @param shape Select shape
+     */
+    public onCanvasSelectedShapeChange(shape: Shapes): void {
         if (window.Worker) {
-            this.worker.onmessage = (ev: MessageEvent) => {
-                cb((ev.data as INewEvent).event);
-            };
+            this.worker.postMessage({
+                type: UserCanvasActionType.CANVAS_CHANGE_SELECTED_SHAPE,
+                shape,
+            } as IUserCanvasActionShapeChange)
         }
     }
 
-    public sendPropertiesChange(properties: IProperties) {
+    /**
+     * Send the current location to the worker
+     * @param point Current location
+     * @param is_mouse_down whether the mouse is pressed or not
+     */
+    public onMouseMovementOnCanvas(point: Point, is_mouse_down: boolean): void {
         if (window.Worker) {
             this.worker.postMessage({
-                action: UserAction.PROPERTIES_CHANGE,
-                ...properties
-            } as IPropertiesChange);
+                type: UserCanvasActionType.CANVAS_CHANGE_MOUSE_POSITION,
+                point,
+                is_mouse_down
+            } as IUserCanvasActionMouseMovement)
         }
     }
 
-    public onThemeChange(themeProperties: IThemeProperties) {
+    /**
+     * Send theme based properties such as select outline color to the worker
+     * @param properties Drawing properties chosen by user
+     */
+    public onCanvasThemeBasedPropertiesChange(palette: Palette): void {
+        const select_outline_color = palette.text.secondary;
         if (window.Worker) {
             this.worker.postMessage({
-                action: UserAction.THEME_CHANGE,
-                ...themeProperties
-            } as IThemeProperties);
+                type: UserCanvasActionType.CANVAS_CHANGE_THEME_BASED_PROPERTIES,
+                properties: {
+                    select_outline_color: select_outline_color,
+                }
+            } as IUserCanvasActionThemeBasedPropertiesChange)
+        }
+    }
+
+    /**
+     * Srt-up a callback to be called whenever a new event is added to the canvas
+     * @param cb Callback to be called when a new event is added 
+     */
+    public setupCanvasUserEventAddListener(cb: (data: IUserCanvasActionEventAdded) => void) {
+        this.worker.onmessage = (ev: MessageEvent)  => {
+            cb(ev.data);
         }
     }
 }
