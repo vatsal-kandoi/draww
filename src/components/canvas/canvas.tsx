@@ -81,6 +81,12 @@ const Canvas = React.forwardRef<ICanvasRefs, {}>((props, refs) => {
         api.initializeLayer(canvas);
     }, [api]);
 
+    React.useEffect(() => {
+        return () => {
+            api.cleanup();
+        }
+    }, []);
+
     return (
         <>
             <CanvasBase onCanvasMount={onCanvasMount}

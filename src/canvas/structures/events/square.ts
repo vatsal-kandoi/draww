@@ -1,5 +1,6 @@
 import { ISquare, IUserSquareEvent, IUserSquareJSON, Point, Shapes } from "../../../interfaces";
 import { normalizeCoordinates } from "../../../utils";
+import { Square } from "../shapes/square";
 import { UserEventBase } from "./base";
 
 /** Defines the class for the sqaure draw event by the yser*/
@@ -58,6 +59,16 @@ export class UserSquareEvent extends UserEventBase implements IUserSquareEvent {
             capture_canvas_dimensions: this.capture_canvas_dimensions,
             shape: this.shape.exportToJson(),
         }
+    }
+
+    public static fromJson(data: IUserSquareJSON): IUserSquareEvent {        
+        const event = new UserSquareEvent(
+            data.capture_canvas_dimensions,
+            data.user_name,
+            Square.fromJson(data.shape)
+        );
+        event.event_name = data.event_name;
+        return event;
     }
 
 

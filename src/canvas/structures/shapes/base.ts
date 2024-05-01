@@ -14,6 +14,10 @@ export class ShapeBase implements IShape {
         throw new Error("Not implemented");
     }    
 
+    public static fromJson(data: IShapeJSON): IShape {
+        throw new Error("Not implemented");
+    }
+
     public getLineDashForStrokeStyle(style: StrokeStyles): number {
         switch(style) {
             case (StrokeStyles.SOLID): {

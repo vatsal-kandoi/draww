@@ -39,4 +39,13 @@ export class Line extends ShapeBase implements ILine {
             border_color: this.border_color,
         }
     }
+
+    public static fromJson(data: ILineJSON): Line {        
+        const line = new Line(
+            data.from_point,
+            data.to_point,
+            data.border_color
+        );
+        return line;
+    }
 }

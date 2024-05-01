@@ -44,5 +44,16 @@ export class Square extends ShapeBase implements ISquare {
             stroke_style: this.stroke_style,
         }
     }
+
+
+    public static fromJson(data: ISquareJSON): Square {        
+        const line = new Square(
+            data.from_point,
+            data.to_point,
+            data.border_color,
+            data.stroke_style
+        );
+        return line;
+    }    
 }
 

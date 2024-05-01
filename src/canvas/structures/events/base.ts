@@ -40,6 +40,10 @@ export class UserEventBase implements IUserEvent {
         throw new Error("Not implemented");
     }
 
+    public static fromJson(data: IUserEventJSON): IUserEvent {
+        throw new Error("Not implemented");
+    }
+
     /**
      * Get the axis value based on existing & candidate points based on the Math max or min function
      * @param axis Axis x or y

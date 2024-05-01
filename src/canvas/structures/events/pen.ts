@@ -1,5 +1,6 @@
 import { ILine, IUserPenEvent, IUserPenJSON, Point, Shapes } from "../../../interfaces";
 import { normalizeCoordinates } from "../../../utils";
+import { Line } from "../shapes/line";
 import { UserEventBase } from "./base";
 
 /** Defines the class for the freeform pen draw event by the yser*/
@@ -60,6 +61,16 @@ export class UserPenEvent extends UserEventBase implements IUserPenEvent {
             capture_canvas_dimensions: this.capture_canvas_dimensions,
             shape: this.shape.map(line => line.exportToJson())
         }
+    }
+
+    public static fromJson(data: IUserPenJSON): IUserPenEvent {        
+        const event = new UserPenEvent(
+            data.capture_canvas_dimensions,
+            data.user_name,
+            data.shape.map((shapeJson) => Line.fromJson(shapeJson))
+        );
+        event.event_name = data.event_name;
+        return event;
     }
 
     /** Get the rectangle that encompasses the current set of lines in the event */
