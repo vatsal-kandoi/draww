@@ -10,8 +10,8 @@ const Container = styled(Paper)(({ theme }) => ({
     width: "300px",
     paddingLeft: theme.spacing(1),
     paddingRight: theme.spacing(1),
-    paddingTop: theme.spacing(1),
-    paddingBottom: theme.spacing(1)
+    paddingTop: theme.spacing(2),
+    paddingBottom: theme.spacing(2)
 }));
 
 export interface ICanvasPropertiesProps {    
