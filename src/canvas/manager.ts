@@ -1,8 +1,11 @@
 import { IUserCanvasActionInitializeCanvas, IUserCanvasActionInitializeLayer, IUserCanvasActionInitializeUser, IUserCanvasActionMouseMovement, IUserCanvasActionPropertiesChange, IUserCanvasActionShapeChange, IUserCanvasActionThemeBasedPropertiesChange, IUserEvent } from "../interfaces";
+import { IUserPlayerActionClearEvents } from "../interfaces/actions/user/player/clear";
+import { IUserPlayerActionRenderEvent } from "../interfaces/actions/user/player/play";
 import { CaptureManager } from "./managers/capture";
 import { SelectionManager } from "./managers/selection";
 import { Renderer } from "./render";
 import { EventStore, UserStore } from "./store";
+import convertToUserEvent from "./structures/events";
 
 export class Manager {
 
@@ -79,5 +82,30 @@ export class Manager {
         renderer.initializeSelectOutlineColor(
             data.properties.select_outline_color,
         )
+    }
+
+
+    /**
+     * Clear all events from the canvas & store
+     * @param data 
+     */
+    public onCanvasClearAllEvents(data: IUserPlayerActionClearEvents) {
+        const event_store = EventStore.getInstance()
+        const renderer = Renderer.getInstance();
+
+        event_store.reset();
+        renderer.clearCanvas();
+        renderer.clearLayer();
+    }
+
+    /**
+     * Render the given event on the canvas
+     * @param data Event JSON
+     */
+    public onCanvasRenderEvent(data: IUserPlayerActionRenderEvent) {
+        const renderer = Renderer.getInstance();
+        const event = convertToUserEvent(data.event);
+
+        renderer.renderEvent(event);
     }
 }

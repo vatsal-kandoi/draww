@@ -20,6 +20,8 @@ export class Line extends ShapeBase implements ILine {
         const toCoords = normalizeCoordinates(this.to_point, current_canvas_dimensions, capture_canvas_dimensions);        
 
         context.beginPath();
+
+        context.setLineDash([0]);
         context.strokeStyle = this.border_color;
         context.moveTo(fromCoords.x, fromCoords.y);
         context.lineTo(toCoords.x, toCoords.y);

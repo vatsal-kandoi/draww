@@ -13,6 +13,11 @@ export class EventStore {
         return this.events;
     }
 
+    /** Remove all events from the store */
+    public reset() {
+        this.events = [];
+    }
+
     /**
      * Update the event in the store
      * @param event Event to be updated
