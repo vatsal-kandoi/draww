@@ -38,7 +38,6 @@ const CanvasProperties: React.FC<ICanvasPropertiesProps> = (props) => {
     return (
         <CanvasPropertiesOptions onPropertiesChange={(properties) => {
             onPropertiesChange(properties);
-            console.log(properties);
         }}>
             {renderOptions()}
         </CanvasPropertiesOptions>

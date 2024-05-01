@@ -1,5 +1,5 @@
 import * as React from "react";
-import { ICanvasUserEventProperties, Shapes } from '../../../../interfaces';
+import { ICanvasUserEventProperties } from '../../../../interfaces';
 import CanvasPropertiesProviderContext from "../../../../contexts/canvasproperties";
 import useCanvasPropertiesProvider from "../../../../hooks/canvasproperties";
 import StrokeStyle from "./strokestyle";
@@ -20,7 +20,6 @@ const CanvasPropertiesOptions: React.FC<ICanvasPropertiesProps> & ICanvasPropert
     const { children, onPropertiesChange} = props;
 
     React.useEffect(() => {
-        console.log(properties)
         onPropertiesChange(properties);
     }, [onPropertiesChange, properties])
 

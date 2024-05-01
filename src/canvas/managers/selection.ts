@@ -92,7 +92,6 @@ export class SelectionManager {
 
     private getEventAgainstPoint(point: Point): IUserEvent | null {
         const events = EventStore.getInstance().getAllEvents();
-        console.log(events);
         let event: IUserEvent | null = null;        
         for (let idx = events.length - 1; idx >= 0; idx-- ) {
             if (events[idx].containsPoint(point)) {
