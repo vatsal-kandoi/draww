@@ -38,7 +38,7 @@ export class SquareCaptureManager extends ShapeCaptureManagerBase{
 
 
     private continueCapturingSquare(point: Point) {
-        const square = new Square(this.start_coordinates, point, this.properties.border_color);                
+        const square = new Square(this.start_coordinates, point, this.properties.border_color, this.properties.stroke_style);                
 
         this.shape = square;
         const renderer = Renderer.getInstance()

@@ -21,13 +21,14 @@ const CanvasProperties: React.FC<ICanvasPropertiesProps> = (props) => {
             case (Shapes.PEN): {
                 return (
                     <>
-                        <CanvasPropertiesOptions.StrokeStyle />
+                        <CanvasPropertiesOptions.StrokeColor />
                     </>
                 )
             }
             case (Shapes.SQUARE): {
                 return (
                     <>
+                        <CanvasPropertiesOptions.StrokeColor />
                         <CanvasPropertiesOptions.StrokeStyle />
                     </>
                 )

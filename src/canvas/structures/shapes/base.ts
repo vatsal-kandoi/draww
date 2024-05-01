@@ -1,4 +1,4 @@
-import { IShape, IShapeJSON, Point } from "../../../interfaces";
+import { IShape, IShapeJSON, Point, StrokeStyles } from "../../../interfaces";
 
 /** Defines the base class for all shapes available to the user */
 export class ShapeBase implements IShape {
@@ -13,4 +13,21 @@ export class ShapeBase implements IShape {
     public shift(from_point: Point, to_point: Point) {
         throw new Error("Not implemented");
     }    
+
+    public getLineDashForStrokeStyle(style: StrokeStyles): number {
+        switch(style) {
+            case (StrokeStyles.SOLID): {
+                return 0;
+            } 
+            case (StrokeStyles.DOTTED): {
+                return 1;
+            }
+            case (StrokeStyles.DASH): {
+                return 6;
+            }
+            default: {
+                return 0;
+            }
+        }
+    }
 }

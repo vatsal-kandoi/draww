@@ -2,7 +2,9 @@ import * as React from "react";
 import { ICanvasUserEventProperties } from '../../../../interfaces';
 import CanvasPropertiesProviderContext from "../../../../contexts/canvasproperties";
 import useCanvasPropertiesProvider from "../../../../hooks/canvasproperties";
+import StrokeColor from "./strokecolor";
 import StrokeStyle from "./strokestyle";
+import { Stack } from "@mui/material";
 
 interface ICanvasPropertiesProps {
     /** Callback triggered on properties change */
@@ -12,7 +14,8 @@ interface ICanvasPropertiesProps {
 }
 
 interface ICanvasPropertiesOptions {
-    StrokeStyle: typeof StrokeStyle
+    StrokeColor: typeof StrokeColor;
+    StrokeStyle: typeof StrokeStyle;
 }
 
 const CanvasPropertiesOptions: React.FC<ICanvasPropertiesProps> & ICanvasPropertiesOptions = (props) => {
@@ -25,11 +28,15 @@ const CanvasPropertiesOptions: React.FC<ICanvasPropertiesProps> & ICanvasPropert
 
     return (
         <CanvasPropertiesProviderContext.Provider value={contextValue}>
-            {children}
+            <Stack direction={"column"}
+                    spacing={2}>
+                {children}
+            </Stack>
         </CanvasPropertiesProviderContext.Provider>
     );
 }
 
+CanvasPropertiesOptions.StrokeColor = StrokeColor;
 CanvasPropertiesOptions.StrokeStyle = StrokeStyle;
 
 export default CanvasPropertiesOptions;
