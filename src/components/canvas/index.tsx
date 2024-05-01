@@ -1,8 +1,8 @@
 
 import * as React from 'react';
-import { Paper } from '@mui/material';
+import { Paper, Stack, useTheme } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { ICanvasUserEventProperties, Shapes } from '../../interfaces';
+import { ICanvasUserEventProperties, IUserCanvasActionEventAdded, IUserEventJSON, Shapes } from '../../interfaces';
 import CanvasOptions from "./options";
 import CanvasProperties from "./properties";
 import CanvasBase, { ICanvasRefs } from './canvas';
@@ -23,6 +23,7 @@ interface CanvasProps {
         /** Handler to be called on shape change */
         onPropertiesChange: (properties: ICanvasUserEventProperties) => void;
     }) => React.ReactElement;
+    onEventChangeHandler: (event: IUserEventJSON) => void;
 }
 
 const Container = styled(Paper)(({ theme }) => ({
@@ -33,10 +34,29 @@ const Container = styled(Paper)(({ theme }) => ({
     minHeight: "100vh",
 }));
 
+const FullWidthContainer = styled(Stack)(({ theme }) => ({
+    ...theme.typography.body2,
+    position: "relative",
+    width: "100%",
+    height: "100%",
+}));
+
+
 const Canvas: React.FC<CanvasProps> = (props) => {
     const ref = React.useRef<ICanvasRefs>(null)
     const [selectedShape, setSelectedShape] = React.useState<Shapes>(Shapes.NONE);
     const [isInsideCanvas, setIsInsideCanvas] = React.useState<boolean>(false);
+    const { palette } = useTheme();
+    const { onEventChangeHandler } = props;
+
+    React.useEffect(() => {
+        if (ref.current !== null) {
+            ref.current.setupCanvasUserEventAddListener((data: IUserCanvasActionEventAdded) => {
+                onEventChangeHandler(data.event);
+            });
+        }
+    }, [onEventChangeHandler])
+
 
     const onShapeChange = (shape: Shapes) => {
         setSelectedShape(shape);
@@ -59,6 +79,10 @@ const Canvas: React.FC<CanvasProps> = (props) => {
         const y = mouseMoveEvt.clientY;
         ref?.current?.onMouseMovementOnCanvas({ x, y }, true);
     };
+
+    React.useEffect(() => {
+        ref?.current?.onCanvasThemeBasedPropertiesChange(palette);
+    }, [palette]);
 
     React.useEffect(() => {
         if (isInsideCanvas) {
@@ -96,10 +120,11 @@ const Canvas: React.FC<CanvasProps> = (props) => {
 
     return (
         <Container elevation={0}>
-            <div onMouseEnter={() => setIsInsideCanvas(true)}
-                    onMouseLeave={() => setIsInsideCanvas(false)}>
+            <FullWidthContainer onMouseEnter={() => setIsInsideCanvas(true)}
+                    onMouseLeave={() => setIsInsideCanvas(false)}
+                    as={"div"}>
                 <CanvasBase ref={ref}/>
-            </div>            
+            </FullWidthContainer>            
             {renderChildren()}
         </Container>
 

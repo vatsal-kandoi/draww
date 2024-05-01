@@ -3,12 +3,12 @@ import styled from "styled-components";
 import { maximizeCanvasSize } from "../../utils";
 
 const Canvas = styled.canvas`
-    position: "absolute", 
-    top: 0, 
-    left: 0,
-    cursor: "pointer", 
-    display: "block",
-    zIndex: 0,
+    position: absolute; 
+    top: 0;
+    left: 0;
+    cursor: pointer; 
+    display: block;
+    zIndex: 0;
 `
 
 interface ICanvasRawProps extends React.HTMLProps<HTMLCanvasElement> {

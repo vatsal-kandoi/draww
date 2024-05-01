@@ -1,7 +1,8 @@
 import * as React from "react";
-import { setupCanvasRenderer, CanvasInterface } from "../../canvas/api2";
+import { setupCanvasRenderer, CanvasInterface } from "../../canvas/api";
 import CanvasBase from "./base";
-import { ICanvasUserEventProperties, Point, Shapes } from "../../interfaces";
+import { ICanvasUserEventProperties, IUserCanvasActionEventAdded, Point, Shapes } from "../../interfaces";
+import { Palette } from "@mui/material";
 
 export interface ICanvasRefs {
     /** Initialize the worker on the thread */
@@ -12,6 +13,10 @@ export interface ICanvasRefs {
     onCanvasSelectedShapeChange: (shape: Shapes) => void;
     /** Send the current location to the worker */
     onMouseMovementOnCanvas: (point: Point, is_mouse_down: boolean) => void;
+    /*** Send theme based properties such as select outline color to the worker  */
+    onCanvasThemeBasedPropertiesChange: (palette: Palette) => void;
+    /** Srt-up a callback to be called whenever a new event is added to the canvas */
+    setupCanvasUserEventAddListener: (cb: (data: IUserCanvasActionEventAdded) => void) => void;
 }
 
 const Canvas = React.forwardRef<ICanvasRefs, {}>((props, refs) => {
@@ -49,6 +54,22 @@ const Canvas = React.forwardRef<ICanvasRefs, {}>((props, refs) => {
          */
         onMouseMovementOnCanvas: (point: Point, is_mouse_down: boolean) => {
             api.onMouseMovementOnCanvas(point, is_mouse_down);
+        },
+
+        /**
+         * Send theme based properties such as select outline color to the worker
+         * @param properties Drawing properties chosen by user
+         */
+        onCanvasThemeBasedPropertiesChange: (palette: Palette) => {
+            api.onCanvasThemeBasedPropertiesChange(palette);
+        },
+
+        /**
+         * Srt-up a callback to be called whenever a new event is added to the canvas
+         * @param cb Callback to be called when a new event is added 
+         */
+        setupCanvasUserEventAddListener: (cb: (data: IUserCanvasActionEventAdded) => void) => {
+            api.setupCanvasUserEventAddListener(cb)
         }
     }));
 
