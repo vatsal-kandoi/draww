@@ -1,3 +1,4 @@
+import { StrokeStyles } from "../../canvas/properties/stroke";
 import { Point } from "../base/point";
 import { IShape, IShapeJSON } from "./base";
 

@@ -54,9 +54,7 @@ export class SelectionManager {
         const renderer = Renderer.getInstance()
         if (is_mouse_down) {
             // Conitnue shifting
-            console.log(point, is_mouse_down);
             this.active_event?.shift(this.last_coordinates, point);
-            console.log(this.active_event)
             renderer.shift(this.active_event);
             this.last_coordinates = point;
             
@@ -77,9 +75,7 @@ export class SelectionManager {
 
             // Remove selection
             if (event === null) {
-                this.active_event = null;
-                this.last_coordinates = DEFAULT_POINT;
-                this.is_mouse_down = false;
+                this.reset();
                 renderer.pushObjectsOntoCanvas();
             }
             else if (this.active_event === null || !this.active_event.isEqual(event)) {                
@@ -90,15 +86,12 @@ export class SelectionManager {
             this.last_coordinates = point;
             this.is_mouse_down = true;
         } else {
-            this.active_event = null;
-            this.last_coordinates = DEFAULT_POINT;
-            this.is_mouse_down = false;
+            this.reset();
         }
     }
 
     private getEventAgainstPoint(point: Point): IUserEvent | null {
         const events = EventStore.getInstance().getAllEvents();
-        console.log(events);
         let event: IUserEvent | null = null;        
         for (let idx = events.length - 1; idx >= 0; idx-- ) {
             if (events[idx].containsPoint(point)) {

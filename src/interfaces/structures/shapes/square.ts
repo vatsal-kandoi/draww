@@ -1,3 +1,4 @@
+import { StrokeStyles } from "../../canvas/properties/stroke";
 import { Point } from "../base/point";
 import { IShape, IShapeJSON } from "./base";
 
@@ -8,6 +9,8 @@ export interface ISquare extends IShape {
     to_point: Point;
     /** Stroke color */
     border_color: string;
+    /** Stroke style of the line */
+    stroke_style: StrokeStyles;
 
     /** Export the square into a serializable JSON with all attributes */
     exportToJson: () => ISquareJSON;
@@ -20,4 +23,6 @@ export interface ISquareJSON extends IShapeJSON {
     to_point: Point;
     /** Stroke color */
     border_color: string;
+    /** Stroke style of the line */
+    stroke_style: StrokeStyles;
 }
